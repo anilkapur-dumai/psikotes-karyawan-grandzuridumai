@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psikotes Karyawan - Grand Zuri Dumai</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#16243a;--muted:#667085;--line:#e4e0d7;--pri:#1d4e89;--gold:#b8892d;--ok:#1f8a5b;--warn:#c27c0e;--bad:#c2410c}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:600px;margin:0 auto;padding:20px 18px 56px}
+h1{font-size:26px;line-height:1.2;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:18px;margin:0 0 10px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.muted{color:var(--muted)} .note{font-size:13px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+textarea{min-height:120px;font-family:ui-monospace,monospace;font-size:13px}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:inherit;font-weight:700;font-size:16px;background:var(--pri);color:#fff;cursor:pointer;text-align:center;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.gold{background:var(--gold)} .btn.wa{background:#25D366}
+.btn+.btn,.btn+a.btn,a.btn+.btn{margin-top:10px}
+.btn:disabled{opacity:.5}
+.err{color:var(--bad);font-size:14px;margin-top:8px}
+.steps{display:flex;gap:6px;margin:6px 0 18px}
+.steps span{flex:1;height:6px;border-radius:9px;background:var(--line);overflow:hidden;position:relative}
+.steps span i{position:absolute;inset:0;width:0;background:var(--pri);transition:width .25s}
+.top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.q{font-size:19px;font-weight:700;line-height:1.4;margin:4px 0 18px}
+.lik{display:grid;gap:8px}
+.lik button{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:12px;border:1px solid var(--line);background:#fff;font:inherit;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;line-height:1.35}
+.lik button b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#eef2f8;color:var(--pri);font-size:13px;flex:0 0 26px}
+.lik button.sel{border-color:var(--pri);background:#eef3fb}
+.lik button.sel b{background:var(--pri);color:#fff}
+.back{background:none;border:0;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;padding:12px 0}
+.code{font-family:ui-monospace,monospace;font-size:12px;word-break:break-all;background:#f6f7f9;border:1px dashed var(--line);border-radius:10px;padding:12px}
+.badge{display:inline-block;padding:4px 10px;border-radius:99px;font-size:13px;font-weight:700}
+.b-ok{background:#e3f4ec;color:var(--ok)} .b-warn{background:#fdf1dc;color:var(--warn)} .b-bad{background:#fde8df;color:var(--bad)}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px solid #f0ede6}
+.row:last-child{border:0} .row b{text-align:right}
+.tr{margin:12px 0}
+.tr .h{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:14px}
+.bar{height:9px;background:#eceae4;border-radius:9px;margin:6px 0;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px}
+.tr p{margin:2px 0;font-size:13px;color:var(--muted)}
+.card p{margin:8px 0}
+ul{padding-left:20px;margin:6px 0} li{margin:5px 0;font-size:14px}
+.tests button{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin:10px 0;font:inherit;color:var(--ink);cursor:pointer}
+.tests .ic{flex:0 0 42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:#eef3fb}
+.tests b{display:block;font-size:16px}
+.tests .st{font-size:12px;font-weight:700;margin-top:4px}
+.tests .done{border-color:#bfe3d0;background:#f6fbf8}
+.hist button{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;font:inherit;cursor:pointer;color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+.fade{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+body.lock .q,body.lock .lik{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.kpi .t{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.kpi .t i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:0 0 30px}
+.kpi .t i svg{width:16px;height:16px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.kpi .v{font-size:34px;font-weight:800;line-height:1.1;margin-top:8px}.kpi .v small{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .w{font-size:18px;font-weight:800;line-height:1.2;margin:10px 0 6px}
+.kpi .st{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.hd{display:flex;align-items:center;gap:10px}.hd i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:0 0 30px}.hd i svg{width:16px;height:16px}
+.top3{display:grid;gap:8px}.top3 div{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.top3 b.n{width:24px;height:24px;border-radius:50%;background:var(--muted);color:#fff;display:grid;place-items:center;font-size:12px}
+.top3 div:first-child{background:#e9f0fa;border-color:#c9d8ef}.top3 div:first-child b.n{background:var(--pri)}
+.top3 span{flex:1;font-weight:700}
+.link{background:none;border:0;color:var(--pri);font:inherit;font-weight:600;cursor:pointer;padding:0;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+// ================= DATA UMUM =================
+const DEPTS={
+FO:{n:'Front Office'},HK:{n:'Housekeeping'},FBS:{n:'F&B Service'},FBP:{n:'F&B Product (Kitchen)'},ENG:{n:'Engineering'},
+HRD:{n:'Human Resources'},SM:{n:'Sales & Marketing'},SEC:{n:'Security'},ACC:{n:'Accounting'}};
+const DK=Object.keys(DEPTS);
+const PURP={R:'Rekrutmen karyawan baru',K:'Perpanjangan kontrak',E:'Evaluasi tahunan'};
+const PNOTE={
+R:'Gunakan hasil ini sebagai bahan wawancara, bukan satu-satunya dasar keputusan. Dalami aspek bernilai rendah dengan pertanyaan di bawah dan cek referensi kerja sebelumnya.',
+K:'Bandingkan hasil ini dengan penilaian kinerja, absensi, dan masukan atasan selama masa kontrak. Bila profil dan kinerja sejalan, hasil ini memperkuat keputusan; bila berbeda, dahulukan data kinerja nyata.',
+E:'Bandingkan dengan hasil tahun lalu (bila ada) dan penilaian kinerja. Gunakan area pengembangan sebagai dasar rencana pelatihan tahun depan.'};
+const L_SES=['Sangat tidak sesuai','Tidak sesuai','Ragu-ragu','Sesuai','Sangat sesuai'];
+const L_SUKA=['Sangat tidak suka','Tidak suka','Biasa saja','Suka','Sangat suka'];
+// Item: [kode, teks, dibalik] atau untuk situasi: [kode, teks, [[pilihan, skor0-3],...]]
+
+const PK_TR={
+TEL:{n:'Ketelitian & Disiplin',hi:'Teliti, disiplin, dan konsisten menjalankan standar. Bisa diandalkan untuk pekerjaan yang menuntut ketepatan.',md:'Cukup teliti untuk tugas sehari-hari, tetapi terbantu dengan checklist untuk pekerjaan detail.',lo:'Cenderung kurang teliti dan kurang konsisten pada prosedur. Perlu SOP yang jelas dan pengawasan.',q:'Ceritakan saat Anda menemukan kesalahan dalam pekerjaan sebelum diserahkan. Apa yang Anda lakukan?',dev:'Gunakan checklist harian dan pemeriksaan ulang oleh supervisor.'},
+TEN:{n:'Ketenangan di Bawah Tekanan',hi:'Tenang dan stabil saat sibuk atau menghadapi masalah.',md:'Umumnya mampu mengelola tekanan, tetapi bisa terpengaruh saat beban sangat tinggi.',lo:'Mudah tertekan atau cemas saat beban kerja tinggi atau saat menerima kritik.',q:'Ceritakan hari kerja tersibuk Anda. Bagaimana Anda tetap mengendalikan diri?',dev:'Latih penanganan situasi sulit lewat simulasi; beri umpan balik secara pribadi dan konkret.'},
+KER:{n:'Kerja Sama Tim',hi:'Kooperatif, suka membantu, dan menjaga hubungan baik dalam tim maupun antar-shift.',md:'Dapat bekerja sama dengan baik dalam situasi biasa.',lo:'Cenderung bekerja sendiri dan kurang luwes dengan rekan yang berbeda karakter.',q:'Ceritakan saat Anda tidak setuju dengan rekan kerja. Bagaimana penyelesaiannya?',dev:'Libatkan dalam tugas tim lintas shift atau lintas departemen.'},
+SOS:{n:'Komunikasi & Inisiatif',hi:'Percaya diri, komunikatif, dan proaktif.',md:'Dapat berinteraksi dengan baik, tetapi tidak selalu mengambil inisiatif.',lo:'Lebih pendiam; nyaman dengan tugas yang tidak banyak interaksi.',q:'Ceritakan usulan yang pernah Anda sampaikan di tempat kerja. Apa hasilnya?',dev:'Beri kesempatan memimpin briefing singkat atau menyambut tamu secara bertahap.'},
+TER:{n:'Adaptasi & Pemecahan Masalah',hi:'Cepat belajar, terbuka pada perubahan, dan suka mencari solusi.',md:'Mau mempelajari hal baru bila diberi arahan yang jelas.',lo:'Lebih nyaman dengan cara yang biasa dan butuh waktu beradaptasi.',q:'Ceritakan saat prosedur atau sistem kerja Anda berubah. Bagaimana Anda menyesuaikan diri?',dev:'Berikan pelatihan bertahap dan pendamping (buddy) saat ada sistem baru.'},
+LAY:{n:'Orientasi Pelayanan Tamu',hi:'Sangat peduli pada kepuasan tamu dan mau berusaha lebih untuk melayani.',md:'Melayani tamu dengan baik sesuai standar.',lo:'Kurang menikmati pekerjaan yang banyak melayani tamu secara langsung.',q:'Ceritakan pengalaman menghadapi tamu yang komplain. Apa yang Anda lakukan?',dev:'Ikutkan pelatihan service excellence dan penanganan keluhan tamu.'},
+INT:{n:'Integritas & Kepatuhan',hi:'Menunjukkan komitmen kuat pada kejujuran, aturan, dan kerahasiaan.',md:'Umumnya mengikuti aturan, tetapi perlu penegasan pada beberapa hal.',lo:'Ada jawaban yang menunjukkan sikap longgar terhadap aturan atau kejujuran. Wajib didalami.',q:'Apa yang Anda lakukan jika melihat rekan mengambil barang milik tamu atau hotel?',dev:'Tegaskan kode etik, prosedur lost & found, dan konsekuensi pelanggaran.'}};
+const PK_W={
+FO:{LAY:.25,SOS:.2,TEN:.2,TEL:.15,KER:.1,INT:.1},HK:{TEL:.3,INT:.25,KER:.15,LAY:.15,TEN:.1,TER:.05},
+FBS:{LAY:.3,SOS:.2,TEN:.15,KER:.15,TEL:.1,INT:.1},FBP:{TEL:.25,TEN:.25,KER:.15,TER:.15,INT:.15,LAY:.05},
+ENG:{TEL:.25,TER:.2,TEN:.2,INT:.15,KER:.1,LAY:.1},HRD:{INT:.25,KER:.2,TEN:.15,SOS:.15,TEL:.15,TER:.1},
+SM:{SOS:.3,TER:.2,LAY:.2,TEN:.15,KER:.05,TEL:.05,INT:.05},SEC:{INT:.3,TEN:.3,TEL:.2,LAY:.1,KER:.1},ACC:{TEL:.35,INT:.35,TEN:.15,KER:.1,TER:.05}};
+const IN_TR={
+JUJ:{n:'Kejujuran',q:'Ceritakan saat Anda melakukan kesalahan yang tidak diketahui orang lain. Apa yang Anda lakukan?',dev:'Tegaskan budaya jujur: apresiasi pengakuan kesalahan dan jelaskan konsekuensi kebohongan.'},
+ASET:{n:'Menjaga Aset & Barang Tamu',q:'Apa yang Anda lakukan dengan barang tamu yang tertinggal, sekecil apa pun nilainya?',dev:'Sosialisasi ulang prosedur lost & found dan kontrol barang/stok.'},
+ATUR:{n:'Kepatuhan Aturan',q:'Pernahkah Anda mengambil jalan pintas dari prosedur kerja? Ceritakan dan apa akibatnya.',dev:'Perketat pengawasan kepatuhan SOP dan absensi; jelaskan alasan di balik aturan.'},
+LAPOR:{n:'Keberanian Melapor',q:'Jika teman dekat Anda melanggar aturan atau mengambil barang, apa yang akan Anda lakukan?',dev:'Jelaskan saluran pelaporan yang aman dan dijamin kerahasiaannya.'},
+RAHA:{n:'Menjaga Kerahasiaan',q:'Informasi apa saja tentang tamu dan hotel yang tidak boleh Anda sampaikan ke orang lain?',dev:'Pelatihan privasi tamu, kerahasiaan data, dan etika media sosial.'}};
+const MN_TR={
+R:{n:'Praktis & Teknik',d:'Suka bekerja dengan tangan, alat, mesin, dan hasil yang terlihat nyata.'},
+I:{n:'Analitis',d:'Suka mencari penyebab masalah, menganalisis, dan memahami cara kerja sesuatu.'},
+A:{n:'Kreatif',d:'Suka menata, mendekorasi, membuat sesuatu tampak menarik, dan ide baru.'},
+S:{n:'Melayani & Membantu',d:'Suka berinteraksi, menolong, melayani, dan membimbing orang.'},
+E:{n:'Memengaruhi & Menjual',d:'Suka meyakinkan orang, bernegosiasi, menjual, dan memimpin.'},
+C:{n:'Administrasi & Ketelitian',d:'Suka data, angka, dokumen, jadwal, dan pekerjaan yang tertata.'}};
+const MN_W={
+FO:{S:.4,C:.3,E:.2,A:.1},HK:{R:.45,C:.25,A:.2,S:.1},FBS:{S:.45,E:.25,A:.2,R:.1},FBP:{R:.4,A:.35,I:.15,C:.1},
+ENG:{R:.5,I:.4,C:.1},HRD:{S:.45,C:.3,E:.25},SM:{E:.5,S:.25,A:.25},SEC:{R:.35,C:.3,S:.2,E:.15},ACC:{C:.55,I:.35,E:.1}};
+// ================= BANK SOAL v2 =================
+// Sumber: Sesi 1 diadaptasi dari IPIP Big-Five Factor Markers (Goldberg, 1999; ipip.ori.org, domain publik)
+// ditambah butir konteks perhotelan. Sesi 2 mengikuti konstruk Honesty-Humility (IPIP-HEXACO) dan format
+// Situational Judgment Test. Sesi 3 mengikuti model RIASEC (Holland) & format aktivitas kerja O*NET Interest Profiler.
+// PENTING: jangan mengubah urutan atau menghapus soal di bank ini setelah tes dipakai.
+const BANK_VER=3;
+const LV={S:'Staff',CPT:'Captain / Leader',SPV:'Supervisor',MGR:'Manager / Asisten Manager'};
+const B1={
+TEL:{p:['Saya selalu siap sebelum mulai bekerja.','Saya memperhatikan hal-hal kecil dan detail dalam pekerjaan.','Saya langsung menyelesaikan tugas tanpa menunda-nunda.','Saya menyukai keteraturan.','Saya bekerja mengikuti jadwal yang sudah dibuat.','Saya sangat cermat dan teliti dalam bekerja.'],
+ r:['Saya sering meninggalkan barang-barang saya berserakan.','Saya kadang membuat pekerjaan jadi berantakan.','Saya sering lupa mengembalikan barang ke tempatnya semula.','Saya kadang menghindari tugas dan kewajiban saya.','Saya kadang melewatkan langkah kecil supaya pekerjaan cepat selesai.']},
+TEN:{p:['Saya merasa tenang dan santai hampir sepanjang waktu.','Saya jarang merasa sedih atau murung.','Saya tetap tenang saat pekerjaan menumpuk.','Saya bisa berpikir jernih saat ada keadaan darurat.','Saya tetap bisa bersikap sopan walaupun sedang lelah atau kesal.','Saya cepat bangkit lagi setelah melakukan kesalahan.'],
+ r:['Saya mudah merasa stres.','Saya sering khawatir tentang banyak hal.','Saya mudah gelisah atau terganggu.','Saya mudah marah atau kesal.','Suasana hati saya sering berubah-ubah.','Saya mudah tersinggung.']},
+KER:{p:['Saya tertarik untuk mengenal orang lain.','Saya ikut merasakan apa yang dirasakan orang lain.','Saya meluangkan waktu untuk membantu orang lain.','Saya membuat orang di sekitar saya merasa nyaman.','Saya senang membantu rekan kerja yang sedang kewalahan.','Saya bisa menerima keputusan tim walaupun berbeda dengan pendapat saya.'],
+ r:['Saya kurang peduli pada orang lain.','Saya tidak tertarik pada masalah orang lain.','Saya kadang berkata kasar atau merendahkan orang lain.','Saya lebih suka mengerjakan semuanya sendiri daripada berbagi tugas.','Saya kesal kalau harus membantu pekerjaan yang bukan tugas saya.']},
+SOS:{p:['Saya merasa nyaman berada di antara banyak orang.','Saya mudah memulai percakapan.','Saya senang berbicara dengan banyak orang yang berbeda.','Saya tidak keberatan menjadi pusat perhatian.','Saya berani menyampaikan ide atau usulan kepada atasan.','Saya mengambil tindakan tanpa harus menunggu disuruh.'],
+ r:['Saya tidak banyak bicara.','Saya lebih suka berada di belakang layar.','Saya pendiam di depan orang yang belum saya kenal.','Saya tidak suka menarik perhatian orang lain.','Saya menunggu diperintah dulu sebelum mengerjakan sesuatu.']},
+TER:{p:['Saya cepat memahami hal-hal baru.','Saya punya banyak ide.','Saya sering punya ide yang bagus untuk memperbaiki pekerjaan.','Saya senang memikirkan cara kerja sesuatu secara mendalam.','Saya senang mempelajari alat atau sistem kerja yang baru.','Saya cepat menyesuaikan diri ketika ada perubahan prosedur.'],
+ r:['Saya sulit memahami penjelasan yang rumit atau abstrak.','Saya tidak tertarik membahas ide atau konsep baru.','Saya kurang bisa membayangkan cara-cara baru dalam bekerja.','Saya lebih nyaman dengan cara lama dan enggan mencoba hal baru.','Saya bingung dan kesal saat ada sistem atau aplikasi baru.']},
+LAY:{p:['Saya senang membuat tamu atau pelanggan merasa puas.','Saya tetap ramah kepada tamu yang sulit atau sedang marah.','Saya memperhatikan kebutuhan tamu walaupun mereka tidak memintanya.','Saya mau melakukan sedikit lebih dari tugas saya demi kepuasan tamu.','Saya merasa puas ketika tamu berterima kasih atas pelayanan saya.','Saya berusaha mengingat nama dan kebiasaan tamu langganan.'],
+ r:['Melayani permintaan orang lain terasa melelahkan bagi saya.','Saya kesal jika tamu terlalu banyak permintaan.','Menurut saya, tamu yang komplain biasanya hanya mencari-cari kesalahan.','Saya merasa tidak perlu tersenyum kepada tamu kalau sedang tidak mood.','Saya mudah kehilangan kesabaran menghadapi tamu yang lambat atau bingung.']}};
+const LIE=['Saya tidak pernah merasa kesal kepada siapa pun.','Saya tidak pernah terlambat sekali pun seumur hidup saya.','Saya tidak pernah berbohong, sekecil apa pun.','Saya menyukai semua orang yang pernah saya temui.','Saya tidak pernah mengambil apa pun yang bukan milik saya, sekecil apa pun, seumur hidup.','Saya tidak pernah melanggar aturan apa pun.','Saya tidak pernah merasa iri kepada siapa pun.','Saya selalu menepati setiap janji, tanpa kecuali.','Saya tidak pernah menunda pekerjaan sedikit pun.','Saya tidak pernah membicarakan keburukan orang lain.'];
+const B2L={
+JUJ:[['Berbohong sedikit kepada atasan itu wajar kalau untuk menghindari masalah.',1],['Saya mengakui kesalahan walaupun sebenarnya bisa saja tidak ketahuan.',0],['Kalau semua orang melakukannya, sedikit curang bukan masalah besar.',1],['Saya tidak berpura-pura menjadi lebih hebat dari kenyataannya.',0],['Memuji atasan secara berlebihan supaya mendapat keuntungan itu wajar.',1]],
+ASET:[['Membawa pulang perlengkapan atau sisa makanan hotel tanpa izin itu wajar karena perusahaan tidak rugi banyak.',1],['Barang tamu yang tertinggal harus diserahkan ke lost & found, sekecil apa pun nilainya.',0],['Karyawan dengan gaji kecil bisa dimaklumi kalau sesekali mengambil barang kantor.',1],['Saya tidak memakai barang milik hotel untuk keperluan pribadi tanpa izin.',0],['Saya mengembalikan uang kembalian yang berlebih jika kasir salah memberi.',0]],
+ATUR:[['Menitip absen kepada teman sesekali tidak masalah.',1],['Saya tetap mengikuti prosedur walaupun ada cara pintas yang lebih cepat.',0],['Aturan boleh dilanggar selama tidak ada yang dirugikan.',1],['Saya mengikuti aturan walaupun tidak ada yang melihat.',0],['Saya bersedia sedikit melanggar aturan jika itu menguntungkan saya.',1]],
+LAPOR:[['Saya akan melaporkan rekan yang mencuri, walaupun dia teman dekat saya.',0],['Melaporkan kesalahan rekan kerja sama saja dengan mengkhianati teman.',1],['Jika melihat kecurangan, saya akan menyampaikannya kepada atasan.',0],['Saya berani berkata jujur kepada atasan walaupun kabarnya tidak menyenangkan.',0],['Saya lebih memilih diam daripada ikut campur saat melihat pelanggaran.',1]],
+RAHA:[['Membicarakan informasi tamu atau masalah internal hotel dengan orang luar itu wajar.',1],['Saya tidak menceritakan informasi tamu kepada orang lain di luar pekerjaan.',0],['Memotret tamu terkenal yang menginap lalu membagikannya di media sosial itu tidak apa-apa.',1],['Saya menjaga password dan akses sistem kerja hanya untuk diri sendiri.',0],['Menceritakan kejadian di tempat kerja secara detail di media sosial itu wajar.',1]]};
+const B2S={
+ASET:[
+['Saat membersihkan kamar setelah tamu check-out, Anda menemukan uang Rp200.000 di bawah kasur. Apa yang Anda lakukan?',[['Menyerahkannya ke lost & found sesuai prosedur',3],['Menyimpannya dulu di tempat aman; kalau tamu menelepon dan menanyakan, baru dikembalikan',1],['Mengambilnya, karena tamu sudah pergi',0],['Memberi tahu supervisor secara lisan saja',2]]],
+['Rekan Anda di restoran sering membawa pulang makanan buffet tanpa izin. Ia menawari Anda ikut membawa.',[['Menolak dan mengingatkannya soal izin atasan',3],['Ikut membawa, daripada dibuang',0],['Menolak tawaran itu, tetapi membiarkan rekan tetap membawa karena itu urusannya sendiri',1],['Menerima sekali-sekali saja',0]]],
+['Tamu memberi Anda tip besar, padahal aturan hotel mewajibkan tip dikumpulkan dan dibagi bersama.',[['Menyerahkannya ke kas tip sesuai aturan',3],['Menyimpannya sendiri karena tamu memberikannya kepada saya',0],['Menyerahkan sebagian saja',0],['Bertanya dulu ke rekan apakah biasanya diserahkan',1]]],
+['Ada amenities dan perlengkapan sisa yang akan dibuang. Anda ingin membawanya pulang.',[['Meminta izin atasan terlebih dahulu',3],['Membawa pulang saja, toh akan dibuang',0],['Membawa sedikit secara diam-diam',0],['Menunggu sampai ada pengumuman resmi dari manajemen bahwa barang sisa boleh dibawa pulang',2]]],
+['Saat merapikan meja restoran, Anda menemukan ponsel tamu yang tertinggal.',[['Menyerahkannya ke lost & found dan mencatatnya',3],['Menyimpannya sendiri di loker supaya aman, sambil menunggu tamu kembali ke restoran',1],['Membuka isi ponsel untuk mencari tahu pemiliknya',1],['Menyimpannya kalau beberapa hari tidak ada yang mencari',0]]],
+['Rekan di gudang mengajak Anda mengambil beberapa botol air mineral dari stok untuk diminum sendiri.',[['Menolak dan mengingatkan prosedur stok',3],['Ikut mengambil, karena hanya air',0],['Mengambil, tapi mencatatnya di buku sendiri',1],['Tidak ikut mengambil, tetapi diam saja karena tidak ingin merusak hubungan dengan rekan',2]]],
+['Anda diminta berbelanja kebutuhan dapur. Toko menawarkan nota dengan harga lebih tinggi dari yang Anda bayar.',[['Menolak, lalu meminta nota yang sesuai dengan harga yang benar-benar dibayar',3],['Menerima; selisihnya untuk uang transport',0],['Menerima nota itu, tapi tidak mengambil selisihnya',1],['Bertanya ke rekan dulu apakah itu biasa',1]]],
+['Saat stock opname, ditemukan kelebihan barang yang tidak tercatat di sistem.',[['Melaporkan dan mencatat jumlah sebenarnya',3],['Mengambil kelebihannya, karena barang itu memang tidak tercatat di sistem mana pun',0],['Membiarkannya tanpa dicatat',1],['Membaginya kepada rekan-rekan',0]]]],
+JUJ:[
+['Anda salah memasukkan tagihan sehingga tamu membayar lebih Rp50.000. Tamu sudah pergi dan tidak ada yang tahu.',[['Melapor ke atasan agar kelebihannya dikembalikan',3],['Diam saja, toh hotel yang diuntungkan',0],['Memperbaiki catatan di sistem tanpa memberi tahu siapa pun, supaya tidak memperpanjang masalah',1],['Menunggu, kalau tamu komplain baru diurus',1]]],
+['Atasan menanyakan kenapa laporan Anda terlambat. Sebenarnya Anda lupa mengerjakannya.',[['Mengakui lupa dan segera menyelesaikannya',3],['Mengatakan sistem sedang error',0],['Mengatakan sedang banyak pekerjaan lain yang lebih mendesak sehingga laporan tertunda',1],['Menyalahkan rekan yang terlambat memberi data',0]]],
+['Anda tidak sengaja memecahkan gelas mahal milik hotel saat tidak ada yang melihat.',[['Melapor ke supervisor',3],['Membersihkannya dan diam saja',0],['Mengatakan bahwa gelas itu sudah retak sebelumnya sehingga mudah pecah',0],['Melapor hanya kalau ditanya',1]]],
+['Anda sedikit kurang enak badan tapi sebenarnya masih bisa bekerja. Teman menyarankan meminta surat sakit agar bisa libur.',[['Tetap masuk, atau izin dengan alasan sebenarnya',3],['Meminta surat sakit agar bisa libur',0],['Pulang lebih awal tanpa memberi tahu siapa pun',0],['Mengabari atasan bahwa sedang sakit cukup parah supaya izinnya pasti disetujui',0]]],
+['Anda terlambat 20 menit karena bangun kesiangan. Atasan menanyakan alasannya.',[['Mengakuinya dan meminta maaf',3],['Mengatakan jalanan macet parah',0],['Mengatakan ada urusan keluarga mendadak pagi tadi yang tidak bisa ditinggalkan',0],['Tidak menjawab dan langsung bekerja',1]]],
+['Di formulir data karyawan, Anda diminta menulis pengalaman kerja. Pengalaman Anda di bidang ini sebenarnya hanya 3 bulan.',[['Menulis apa adanya: 3 bulan',3],['Menulis 1 tahun agar terlihat berpengalaman',0],['Tidak menuliskannya sama sekali',1],['Menulis "lebih dari 6 bulan"',0]]],
+['Tamu memuji kebersihan kamar yang sebenarnya dikerjakan oleh rekan Anda.',[['Meneruskan pujian itu kepada rekan yang mengerjakan',3],['Menerima pujian itu untuk diri sendiri',0],['Diam saja',1],['Mengatakan bahwa kamar itu dikerjakan bersama-sama supaya semua ikut mendapat pujian',1]]],
+['Anda lupa melakukan pengecekan rutin, padahal formulir harus diisi "sudah dicek".',[['Mengecek sekarang, lalu mengisi dengan jujur',3],['Mengisi "sudah dicek" saja, karena biasanya kondisinya memang selalu baik',0],['Mengosongkan formulir itu',1],['Meminta rekan yang mengisinya',0]]]],
+ATUR:[
+['Teman meminta Anda mengabsenkan dirinya karena ia akan datang terlambat 30 menit.',[['Menolak dan menyarankan ia memberi tahu atasan',3],['Membantu sekali ini saja',0],['Membantu kali ini, tetapi memintanya berjanji tidak akan mengulanginya lagi',0],['Menolak, tanpa berkata apa-apa lagi',2]]],
+['Antrean check-in panjang. Tamu langganan meminta langsung diberi kunci kamar tanpa pemeriksaan identitas.',[['Tetap memeriksa identitas dengan sopan',3],['Langsung memberi kunci karena sudah kenal',0],['Memberikan kunci dulu supaya antrean cepat berkurang, identitas dicek belakangan',1],['Meminta rekan lain yang menanganinya',1]]],
+['Sudah jam pulang, tapi serah terima shift belum dilakukan karena rekan shift berikutnya terlambat.',[['Menunggu dan melakukan serah terima',3],['Pulang saja, sudah lewat jam kerja',0],['Meninggalkan catatan di meja lalu pulang',1],['Menitipkan pesan lisan kepada rekan lain yang masih bertugas, lalu pulang tepat waktu',1]]],
+['Seragam Anda kotor. Rekan menyarankan bekerja memakai baju biasa karena tidak ada yang akan menegur.',[['Meminta seragam cadangan ke bagian linen atau melapor ke supervisor',3],['Memakai baju biasa, toh tidak ada yang menegur',0],['Tetap memakai seragam yang kotor',1],['Memakai baju biasa, tapi bekerja di area belakang saja',1]]],
+['Prosedur keselamatan mewajibkan sarung tangan dan masker saat memakai bahan kimia pembersih, tapi terasa merepotkan.',[['Tetap memakai alat pelindung lengkap',3],['Tidak memakainya karena hanya sebentar',0],['Memakai sarung tangan saja',1],['Memakainya hanya ketika supervisor sedang berada di sekitar area kerja',0]]],
+['Seseorang meminta Anda membukakan kamar yang menurutnya kamarnya, tetapi ia tidak membawa kartu kunci.',[['Menolak dengan sopan dan mengarahkannya ke Front Office untuk verifikasi identitas',3],['Membukakan karena ia terlihat meyakinkan',0],['Membukakan pintu setelah ia bisa menyebutkan nomor kamar dan nama di reservasinya',0],['Menelepon rekan lalu membukakan pintunya',1]]],
+['Pekerjaan Anda selesai lebih cepat dan Anda ingin pulang sebelum jam kerja berakhir.',[['Melapor ke atasan dan meminta tugas tambahan',3],['Pulang diam-diam',0],['Menitip pesan ke rekan lalu pulang',1],['Bersantai di tempat yang tidak terlihat sampai jam pulang, karena tugas sudah selesai',0]]],
+['Makanan sisa kemarin masih terlihat bagus, tetapi SOP dapur mengharuskannya dibuang.',[['Membuangnya sesuai SOP',3],['Menyajikannya lagi untuk tamu',0],['Menyajikannya untuk makan karyawan tanpa izin',1],['Menyimpannya lagi untuk besok',0]]]],
+LAPOR:[
+['Anda melihat rekan satu shift mengambil minuman dari minibar kamar tamu.',[['Melaporkannya kepada supervisor agar segera ditindaklanjuti',3],['Pura-pura tidak melihat',0],['Menegur dan menyuruhnya mengembalikan, tanpa melapor',2],['Diam karena takut dimusuhi',0]]],
+['Supervisor meminta Anda mengubah laporan stok agar terlihat tidak ada barang yang hilang.',[['Menolak dan melaporkannya ke manajer',3],['Menuruti karena itu perintah atasan',0],['Menurutinya karena itu perintah atasan, tetapi diam-diam menyimpan catatan aslinya',1],['Menolak, tapi tidak melapor ke siapa pun',2]]],
+['Anda tahu seorang rekan sering memalsukan jam lembur di daftar hadir.',[['Melaporkannya ke supervisor',3],['Menegurnya secara pribadi saja dan memberinya kesempatan untuk berhenti',2],['Diam, bukan urusan saya',0],['Ikut melakukannya juga',0]]],
+['Seorang pemasok menawari Anda uang "terima kasih" agar barangnya dipilih.',[['Menolak tawaran itu dan melaporkannya kepada atasan',3],['Menerima, tapi tetap memilih pemasok terbaik',0],['Menolak tanpa melapor',2],['Menerima kalau jumlahnya kecil',0]]],
+['Seorang rekan bercerita bahwa ia sering mengambil uang kecil dari kas tip.',[['Melaporkannya ke supervisor',3],['Menasihatinya saja sebagai teman agar ia berhenti melakukannya',2],['Pura-pura tidak mendengar',0],['Meminta bagian',0]]],
+['Anda melihat kabel listrik terkelupas di area tamu, padahal itu bukan tanggung jawab departemen Anda.',[['Mengamankan area dan melapor ke engineering',3],['Membiarkannya karena bukan tugas saya',0],['Memberi tahu rekan yang lewat saja, karena itu bukan tanggung jawab departemen saya',1],['Melapor besok',1]]],
+['Atasan Anda sering meminta staf mengerjakan urusan pribadinya di jam kerja.',[['Menyampaikan keberatan secara sopan kepada atasan; bila terus berlanjut, melapor ke HRD',3],['Menurutinya saja, karena menolak permintaan atasan bisa berisiko untuk penilaian kerja',0],['Mengeluh ke rekan-rekan',1],['Menolak dengan kasar',1]]],
+['Anda tidak sengaja salah memasukkan harga kamar sehingga hotel dirugikan.',[['Segera melapor ke atasan',3],['Memperbaikinya diam-diam di sistem agar tidak ada yang perlu tahu',1],['Menunggu sampai ketahuan',0],['Menyalahkan sistem',0]]]],
+RAHA:[
+['Seseorang menelepon, mengaku keluarga tamu, dan menanyakan nomor kamar tamu tersebut.',[['Tidak memberikan nomor kamar, tetapi menawarkan untuk menyambungkan telepon ke kamar tamu',3],['Memberikan nomor kamar karena ia keluarga',0],['Meminta nama lengkap tamu sebagai verifikasi, lalu memberikan nomor kamarnya',0],['Menyuruhnya datang ke hotel, lalu memberikan nomor kamarnya',1]]],
+['Seorang artis terkenal menginap di hotel. Teman Anda bertanya apakah benar artis itu menginap.',[['Tidak membenarkan atau menyangkalnya',3],['Membenarkan saja, tanpa detail',0],['Mengirim fotonya secara diam-diam',0],['Memberi petunjuk tanpa menyebut langsung, karena tidak ada informasi yang dibocorkan',0]]],
+['Teman Anda yang bekerja di hotel pesaing menanyakan harga khusus untuk klien korporat hotel Anda.',[['Tidak memberikan informasi tersebut',3],['Memberikan perkiraan kasarnya saja, karena angka pastinya tidak disebutkan',1],['Memberikannya karena ia teman',0],['Mengirimkan daftar harganya',0]]],
+['Tamu meninggalkan map dokumen pribadi di lobi. Rekan ingin membukanya untuk melihat isinya.',[['Mencegahnya, lalu menyerahkan map itu ke Front Office atau lost & found tanpa dibuka',3],['Membuka sedikit hanya untuk mencari nama pemilik, lalu menyerahkannya',2],['Ikut melihat karena penasaran',0],['Membiarkan rekan membukanya',0]]],
+['Rekan meminjam username dan password sistem Anda karena akunnya terkunci.',[['Menolak dan menyarankannya menghubungi IT',3],['Meminjamkannya sebentar',0],['Masuk dengan akun saya, lalu membiarkannya memakai',0],['Meminjamkannya sebentar, lalu segera mengganti password setelah ia selesai memakainya',1]]],
+['Seseorang yang mengaku petugas datang ke lobi dan menanyakan data seorang tamu.',[['Mengarahkannya ke manajer jaga sesuai prosedur',3],['Langsung memberikan data yang diminta, karena ia mengaku sebagai petugas resmi',0],['Memberikan nomor kamarnya saja',0],['Menyuruhnya mencari sendiri',1]]],
+['Anda ingin membuat konten media sosial tentang pekerjaan Anda di hotel.',[['Membuat konten sesuai aturan hotel, tanpa menampilkan tamu',3],['Merekam suasana restoran saat tamu sedang makan agar hotel terlihat ramai dan menarik',0],['Memotret dokumen pemesanan tamu',0],['Merekam area belakang hotel tanpa izin',1]]],
+['Tamu meninggalkan laptop yang menyala dan terbuka di meja business center.',[['Menutup layar tanpa melihat isinya dan mengamankannya',3],['Melihat sekilas isi layar hanya untuk mencari nama pemiliknya, lalu mengamankannya',1],['Membiarkannya tetap terbuka',1],['Memeriksa isinya',0]]]]};
+const B3={
+R:['Memperbaiki peralatan yang rusak, misalnya keran, lampu, atau AC.','Menggunakan mesin atau peralatan kerja, misalnya mesin cuci industri atau peralatan dapur.','Berpatroli dan memeriksa keadaan gedung secara langsung.','Merakit atau memasang barang, misalnya furnitur atau perlengkapan acara.','Merawat taman, kolam renang, atau fasilitas gedung.','Mengoperasikan peralatan seperti genset, boiler, atau pompa air.','Mengecek kondisi fisik kamar dan memperbaiki kerusakan kecil.','Bekerja dengan aktivitas fisik, termasuk di luar ruangan.'],
+I:['Mencari tahu penyebab sebuah masalah sampai ketemu.','Menganalisis data, misalnya angka penjualan atau tingkat hunian kamar.','Mempelajari cara kerja sebuah sistem atau mesin.','Membandingkan beberapa pilihan untuk menemukan yang paling hemat dan efisien.','Meneliti bahan atau cara baru agar pekerjaan lebih baik.','Menguji kualitas bahan atau produk sebelum dipakai.','Mencari tahu mengapa tamu sering mengeluhkan hal yang sama.','Menghitung biaya atau takaran sebuah resep.'],
+A:['Menata dekorasi ruangan atau meja agar terlihat indah.','Membuat tampilan hidangan, produk, atau promosi menjadi menarik.','Menciptakan menu, resep, atau ide acara yang baru.','Merangkai bunga atau membuat hiasan.','Memotret atau membuat video yang menarik.','Menata kamar atau ruangan dengan tema tertentu.','Membuat desain menu atau brosur.','Menghias kue atau makanan.'],
+S:['Menyambut dan membantu tamu yang baru datang.','Mendengarkan keluhan orang dan membantu mencarikan jalan keluar.','Melatih atau membimbing karyawan baru.','Menemani dan memandu tamu agar merasa nyaman.','Membantu orang yang sedang kesulitan.','Menjelaskan fasilitas hotel kepada tamu.','Membantu tamu lansia atau tamu yang sedang sakit.','Menjadi penengah ketika ada orang yang berselisih.'],
+E:['Menawarkan dan menjual paket kamar atau produk kepada tamu.','Bernegosiasi harga dengan klien atau pemasok.','Memimpin tim untuk mencapai target.','Mempresentasikan ide atau produk di depan orang banyak.','Mencari klien atau pelanggan baru.','Membuat target penjualan dan berusaha mencapainya.','Menawarkan menu tambahan atau upgrade kamar kepada tamu.','Mewakili hotel di pameran atau pertemuan bisnis.'],
+C:['Menghitung uang dan mencocokkannya dengan laporan.','Mengisi formulir dan data dengan rapi dan lengkap.','Memeriksa dan mencatat stok barang.','Menyusun jadwal kerja atau jadwal kegiatan.','Mengarsipkan dokumen agar mudah dicari.','Memeriksa tagihan atau faktur agar tidak ada yang salah.','Memasukkan data ke komputer atau sistem.','Mengikuti daftar periksa (checklist) dengan teliti.']};
+const LD_TR={
+DEL:{n:'Perencanaan & Delegasi',q:'Ceritakan saat tim Anda kekurangan orang di hari sibuk. Bagaimana Anda mengatur pekerjaan?',dev:'Latih penyusunan rencana kerja harian dan pembagian tugas berdasarkan kemampuan.'},
+COA:{n:'Membimbing & Menegur',q:'Bagaimana Anda menegur bawahan yang kinerjanya menurun?',dev:'Pelatihan coaching dan cara memberi umpan balik yang spesifik.'},
+KON:{n:'Menangani Konflik',q:'Ceritakan konflik dalam tim yang pernah Anda selesaikan. Apa langkah Anda?',dev:'Pelatihan mediasi dan komunikasi asertif.'},
+KEP:{n:'Keputusan di Bawah Tekanan',q:'Ceritakan keputusan cepat yang pernah Anda ambil tanpa sempat bertanya ke atasan. Apa hasilnya?',dev:'Simulasi situasi darurat dan kewenangan pengambilan keputusan yang jelas.'}};
+const B4S={
+DEL:[
+['Dua staf Anda sakit pada hari dengan tingkat hunian penuh.',[['Mengatur ulang tugas, meminta bantuan departemen lain, dan ikut turun tangan langsung',3],['Mengerjakan sebagian besar sendiri tanpa mengatur tim',1],['Membiarkan tim bekerja seperti biasa dan berharap cukup',0],['Meminta semua staf yang ada untuk lembur, tanpa menentukan prioritas pekerjaan',1]]],
+['Atasan memberi target baru yang ketat untuk minggu ini.',[['Memecah target menjadi tugas harian untuk tim',3],['Menyampaikan target ke tim dan membiarkan mereka mengatur sendiri',1],['Mengerjakan target sendiri supaya pasti beres',1],['Menunggu mendekati tenggat baru mulai mengatur',0]]],
+['Seorang staf baru belum menguasai tugasnya, sementara pekerjaan menumpuk.',[['Memasangkannya dengan staf senior',3],['Memberinya tugas berat agar cepat belajar',0],['Mengerjakan bagiannya sendiri dulu sampai pekerjaan yang menumpuk selesai',1],['Membiarkannya belajar sendiri',0]]],
+['Anda harus cuti tiga hari saat ada acara besar.',[['Menyiapkan rencana kerja dan menunjuk pengganti yang sudah diberi pengarahan',3],['Membatalkan cuti',1],['Tetap cuti dan berharap tim bisa menangani',0],['Meminta tim menelepon jika ada masalah, tanpa menunjuk pengganti',1]]],
+['Ada pekerjaan rutin yang selalu Anda kerjakan sendiri, padahal staf senior mampu mengerjakannya.',[['Melatih, mendelegasikan, lalu memantau hasilnya',3],['Tetap mengerjakannya sendiri, karena hasilnya pasti benar dan tidak perlu diperiksa ulang',1],['Menyerahkannya begitu saja tanpa arahan',1],['Membiarkan pekerjaan itu menumpuk',0]]],
+['Jadwal shift bulan depan harus dibuat, dan beberapa staf meminta libur di tanggal yang sama.',[['Menyusun jadwal yang adil sesuai kebutuhan operasional',3],['Mengabulkan permintaan staf yang paling dekat dengan saya karena sudah lama bekerja sama',0],['Mengabulkan semua dan berharap orangnya cukup',0],['Meminta staf mengaturnya sendiri',1]]]],
+COA:[
+['Staf yang biasanya rajin mulai sering terlambat dalam dua minggu terakhir.',[['Mengajaknya bicara empat mata',3],['Langsung memberi surat peringatan agar ia sadar dan tidak mengulanginya lagi',1],['Menegurnya di depan tim',0],['Membiarkannya karena biasanya rajin',0]]],
+['Kesalahan staf Anda membuat tamu komplain.',[['Menangani tamu lebih dulu, lalu membahas kesalahan itu dengan staf secara pribadi dan memberi arahan',3],['Memarahi staf di depan tamu',0],['Mengambil alih dan tidak membahasnya lagi',1],['Melaporkan staf itu ke atasan tanpa terlebih dahulu berbicara dengannya',1]]],
+['Seorang staf menunjukkan kinerja sangat baik bulan ini.',[['Memberi apresiasi yang spesifik',3],['Tidak perlu apa-apa, itu memang tugasnya',0],['Memujinya singkat saja',2],['Memberinya lebih banyak tugas tanpa penjelasan, karena ia terbukti mampu',1]]],
+['Staf senior menolak mengikuti SOP baru karena merasa cara lama lebih baik.',[['Mendengarkan, menjelaskan tujuannya, lalu menegaskan SOP',3],['Membiarkannya karena ia senior',0],['Langsung melaporkannya ke HRD',1],['Mengikuti caranya karena ia lebih berpengalaman dan hasil kerjanya selama ini baik',0]]],
+['Staf Anda sering mengeluh di depan rekan lain tentang kebijakan hotel.',[['Mengajaknya bicara pribadi dan mendengarkan keluhannya',3],['Menegurnya dengan keras di depan tim supaya staf lain tidak ikut-ikutan mengeluh',0],['Membiarkannya saja',0],['Ikut mengeluh supaya akrab dengan staf',0]]],
+['Staf baru membuat kesalahan yang sama untuk ketiga kalinya.',[['Mencari penyebabnya dan melatihnya ulang',3],['Langsung memberi surat peringatan',1],['Meminta ia dipindahkan ke departemen lain yang pekerjaannya lebih sederhana',1],['Memarahinya supaya jera',0]]]],
+KON:[
+['Dua staf Anda bertengkar soal pembagian shift.',[['Mendengar kedua pihak, lalu memutuskan dengan adil',3],['Membiarkan mereka menyelesaikannya sendiri, karena keduanya sudah sama-sama dewasa',0],['Memihak staf yang lebih senior',0],['Memindahkan salah satu staf tanpa bertanya',1]]],
+['Departemen lain menyalahkan tim Anda atas keterlambatan pelayanan.',[['Mengumpulkan fakta dan mencari solusi bersama',3],['Balik menyalahkan departemen tersebut',0],['Mengakui kesalahan tim sendiri di depan departemen lain agar masalah cepat selesai',0],['Diam saja agar masalah tidak panjang',1]]],
+['Seorang staf mengadu bahwa rekannya sering bersikap kasar kepadanya.',[['Mendengarkan kedua pihak dan mengumpulkan informasi, lalu menindaklanjutinya',3],['Menyuruhnya bersabar',0],['Langsung menegur rekan yang diadukan tanpa mendengar sisi lain',1],['Meneruskannya ke HRD tanpa ikut menangani',1]]],
+['Tim Anda terbelah menjadi dua kubu dan suasana kerja tidak nyaman.',[['Membahasnya terbuka bersama tim dan membuat aturan bersama',3],['Mendekati kubu yang lebih kuat',0],['Membiarkan saja selama pekerjaan selesai',0],['Mengatur jadwal kerja sedemikian rupa agar kedua kubu jarang bertemu di shift yang sama',1]]],
+['Tamu marah besar kepada staf Anda dan menuntut staf itu dipecat.',[['Menenangkan tamu dan menyelesaikan masalahnya, lalu meninjau kejadian itu bersama staf secara adil',3],['Langsung menyetujui tuntutan tamu demi menjaga nama baik dan kepuasan pelanggan',0],['Membela staf dan berdebat dengan tamu',0],['Menyerahkannya ke manajer tanpa ikut menangani',1]]],
+['Dua departemen saling lempar tanggung jawab atas keluhan tamu yang sama.',[['Mempertemukan kedua pihak, menyelesaikan keluhan tamu dulu, lalu memperjelas alur tanggung jawab',3],['Membela departemen sendiri, karena tim saya sudah bekerja sesuai prosedur yang ada',0],['Membiarkan manajer yang memutuskan',1],['Mengabaikannya karena bukan urusan saya',0]]]],
+KEP:[
+['Listrik padam di malam hari saat restoran penuh tamu.',[['Menjalankan prosedur darurat dan menenangkan tamu',3],['Menunggu instruksi atasan dulu',0],['Menyuruh tamu menunggu tanpa penjelasan',0],['Menelepon atasan untuk melaporkan kejadian, lalu menunggu kabar sebelum bertindak',1]]],
+['Tamu VIP datang lebih awal dan kamarnya belum siap.',[['Menawarkan alternatif sambil mempercepat persiapan',3],['Meminta tamu menunggu di lobi tanpa kepastian',0],['Memberikan kamar yang belum dibersihkan',0],['Menyerahkan urusan itu ke staf Front Office saja, karena memang tugas mereka',1]]],
+['Anggaran departemen Anda dipotong 20%.',[['Meninjau pengeluaran, menentukan prioritas, dan menyusun rencana penghematan bersama tim',3],['Memotong semua pos anggaran sama rata tanpa analisis supaya terlihat adil',1],['Menolak dan tetap memakai anggaran lama',0],['Menunggu atasan memberi rincian',1]]],
+['Dua tugas mendesak datang bersamaan dari dua atasan yang berbeda.',[['Menilai prioritas, mengonfirmasi ke kedua atasan, lalu membagi tugas dan sumber daya',3],['Mengerjakan tugas dari atasan yang lebih galak dulu',0],['Mengerjakan yang lebih mudah dulu',1],['Mengerjakan keduanya sekaligus semampunya tanpa konfirmasi kepada siapa pun',1]]],
+['Alarm kebakaran berbunyi, tetapi belum jelas apakah benar ada kebakaran.',[['Menjalankan prosedur evakuasi sambil memastikan kondisi',3],['Menunggu sampai ada kepastian dari tim keamanan agar tamu tidak panik tanpa alasan',0],['Mematikan alarm agar tamu tidak panik',0],['Menelepon atasan dan menunggu instruksi',1]]],
+['Pemasok utama gagal mengirim bahan untuk acara besar besok.',[['Menghubungi pemasok cadangan dan menyesuaikan menu',3],['Menunggu pemasok utama besok pagi',0],['Membatalkan sebagian layanan tanpa memberi tahu klien',0],['Melapor ke atasan, lalu menunggu keputusan sebelum melakukan langkah apa pun',1]]]]};
+
+// ================= TAMBAHAN BANK SOAL v3 =================
+// Butir Sesi 1 tambahan diadaptasi dari IPIP (Goldberg, 1999; ipip.ori.org, domain publik) dan butir konteks perhotelan.
+B1.TEL.p.push('Saya bekerja keras untuk menyelesaikan tugas dengan baik.','Saya melakukan lebih dari yang diharapkan dari saya.');
+B1.TEL.r.push('Saya sering membiarkan pekerjaan tidak selesai.','Saya sering membuang-buang waktu saat bekerja.');
+B1.TEN.p.push('Saya tidak mudah terganggu oleh banyak hal.','Saya menerima keadaan apa adanya tanpa mudah cemas.');
+B1.TEN.r.push('Saya mudah panik saat ada masalah mendadak.','Saya sering merasa tidak sanggup menghadapi masalah yang datang.');
+B1.KER.p.push('Saya lebih mengutamakan kerja sama daripada persaingan.','Saya selalu punya kata-kata yang baik untuk orang lain.');
+B1.KER.r.push('Saya kadang membentak orang lain saat sedang kesal.','Saya mudah mencari-cari kesalahan orang lain.');
+B1.SOS.p.push('Saya mudah mengambil alih kendali saat dibutuhkan.','Saya selalu aktif dan bersemangat dalam bekerja.');
+B1.SOS.r.push('Saya menunggu orang lain yang memimpin lebih dulu.','Saya sulit memulai pembicaraan dengan tamu atau orang baru.');
+B1.TER.p.push('Saya terus berusaha mengembangkan diri.','Saya cukup dijelaskan sekali untuk memahami sesuatu.');
+B1.TER.r.push('Saya cepat menyerah saat menghadapi masalah yang sulit.','Saya jarang mencari tahu cara kerja yang lebih baik.');
+B1.LAY.p.push('Saya meminta maaf dengan tulus ketika tamu merasa tidak puas, walaupun itu bukan kesalahan saya.','Saya senang membantu tamu menemukan jalan keluar atas masalah mereka.');
+B1.LAY.r.push('Bagi saya, urusan tamu selesai begitu tugas saya selesai, tanpa perlu memastikan tamu puas.','Menurut saya, tamu hotel terlalu dimanjakan.');
+
+B2S.ASET.push(
+['Rekan kasir meminta Anda menukar uang kas dengan uang pribadinya untuk keperluan mendesak, dan berjanji menggantinya besok.',[['Menolak dengan sopan, karena uang kas hotel tidak boleh dipakai untuk keperluan pribadi siapa pun',3],['Mengizinkan, karena besok akan langsung diganti',0],['Mengizinkan, asalkan ia menuliskan catatan pinjaman',1],['Menolak permintaannya, tetapi tidak mengatakan apa pun kepada siapa pun agar rekan tidak malu',2]]],
+['Tamu yang sudah check-out meninggalkan sebotol parfum yang masih baru di kamar.',[['Menyerahkannya ke lost & found sesuai prosedur',3],['Membawanya pulang, karena tamu sudah meninggalkan hotel',0],['Memberikannya kepada rekan yang sedang berulang tahun',0],['Menyimpannya di troli sambil menunggu, siapa tahu ada tamu atau rekan yang menanyakannya',1]]]);
+B2S.JUJ.push(
+['Saat evaluasi, Anda ditanya apakah pernah mendapat teguran di tempat kerja sebelumnya. Anda memang pernah.',[['Mengakuinya dan menjelaskan pelajarannya',3],['Mengatakan tidak pernah mendapat teguran sama sekali',0],['Mengalihkan pembicaraan ke prestasi yang pernah saya raih agar kesan saya tetap baik',1],['Mengatakan itu hanya salah paham kecil, padahal tidak',0]]],
+['Tamu bertanya apakah kolam renang buka sampai malam. Anda tidak yakin jawabannya.',[['Memastikannya dulu, lalu memberi jawaban yang benar',3],['Menjawab "ya" saja supaya tamu senang dan tidak perlu menunggu lama',0],['Menjawab sesuai perkiraan saya sendiri tanpa memastikan',1],['Menyarankan tamu bertanya langsung ke bagian lain',1]]]);
+B2S.ATUR.push(
+['Supervisor sedang tidak ada. Seorang rekan mengusulkan istirahat lebih lama dari jadwal karena suasana sedang sepi.',[['Tetap beristirahat sesuai jadwal yang berlaku',3],['Ikut beristirahat lebih lama karena memang sedang sepi',0],['Beristirahat lebih lama asalkan tidak ada yang tahu',0],['Menelepon supervisor dulu untuk meminta izin',2]]],
+['Lift barang rusak. Rekan menyarankan memakai lift tamu sambil membawa troli kotor.',[['Melapor dan mengikuti jalur alternatif yang diizinkan',3],['Langsung memakai lift tamu karena keadaan mendesak dan pesanan harus segera sampai',0],['Memakai tangga darurat sambil mengangkat troli sendirian',1],['Menunda pekerjaan tanpa memberi tahu siapa pun',0]]]);
+B2S.LAPOR.push(
+['Anda melihat rekan bekerja dalam keadaan mabuk.',[['Segera melapor ke supervisor',3],['Menyuruhnya pulang diam-diam tanpa memberi tahu siapa pun',1],['Membiarkannya karena ia teman dekat saya',0],['Menceritakannya ke rekan-rekan lain',0]]],
+['Anda mendapati rekan memberikan diskon kamar kepada temannya tanpa persetujuan atasan.',[['Melaporkannya kepada atasan',3],['Menegurnya secara pribadi saja',2],['Membiarkannya karena nilai diskonnya kecil',0],['Meminta diskon yang sama untuk teman saya',0]]]);
+B2S.RAHA.push(
+['Rekan meminta Anda memotret daftar tamu VIP untuk dikirim ke grup pertemanan.',[['Menolak, karena data tamu bersifat rahasia',3],['Memotret sebagian saja tanpa nama lengkap',0],['Memotret, lalu memintanya tidak menyebarkan',0],['Menyuruhnya meminta izin atasan terlebih dahulu',2]]],
+['Seorang tamu meminta agar kehadirannya di hotel tidak diberitahukan kepada siapa pun.',[['Menghormati permintaannya sesuai prosedur privasi',3],['Menceritakannya ke rekan karena tamunya menarik perhatian',0],['Mengiyakan, tetapi tidak menyampaikan permintaan itu kepada petugas shift berikutnya',1],['Menolak permintaannya karena tidak ada aturan khusus',0]]]);
+
+LD_TR.BIS={n:'Bisnis & Keuangan',q:'Ceritakan keputusan yang pernah Anda ambil untuk menghemat biaya atau meningkatkan pendapatan. Apa hasilnya?',dev:'Pelatihan analisis biaya, penyusunan anggaran, dan membaca laporan keuangan departemen.'};
+B4S.DEL.push(
+['Ada renovasi kecil yang harus selesai bersamaan dengan operasional normal.',[['Menyusun jadwal bertahap dan memantau progres harian',3],['Menunggu operasional sepi dulu baru mulai mengerjakan',1],['Menyerahkan sepenuhnya ke kontraktor tanpa pemantauan',0],['Mengerjakan semuanya sekaligus di akhir pekan tanpa rencana',1]]],
+['Seorang staf senior meminta lebih banyak tanggung jawab.',[['Memberinya tugas yang lebih menantang',3],['Menolak karena khawatir posisi saya tersaingi',0],['Menjanjikannya tugas baru, tetapi tidak pernah benar-benar menindaklanjutinya',0],['Menyerahkan sebagian besar tugas saya kepadanya',1]]],
+['Tingkat hunian diperkirakan melonjak minggu depan.',[['Menyiapkan jadwal, stok, dan rencana cadangan',3],['Menunggu hari H, lalu menyesuaikan di tempat',0],['Meminta semua staf siaga tanpa pembagian tugas yang jelas',1],['Menambah pekerja harian tanpa menghitung kebutuhan',1]]],
+['Anda harus menunjuk satu staf untuk tugas penting. Kandidatnya teman dekat Anda dan staf lain yang lebih kompeten.',[['Memilih staf yang paling kompeten dan menjelaskan alasannya kepada keduanya',3],['Memilih teman dekat karena saya lebih percaya kepadanya',0],['Mengundi keduanya agar terlihat adil',1],['Mengerjakannya sendiri agar tidak ada yang kecewa',1]]],
+['Laporan harian tim sering terlambat dikirim ke atasan.',[['Mencari penyebabnya dan menunjuk penanggung jawab',3],['Mengerjakan sendiri laporan itu setiap hari',1],['Menegur seluruh tim di briefing pagi tanpa terlebih dahulu mencari penyebabnya',1],['Membiarkannya karena pekerjaan utama tetap berjalan',0]]],
+['Ada SOP baru dari manajemen yang harus diterapkan minggu ini.',[['Menjelaskan SOP ke seluruh tim, melatih mereka, lalu memantau penerapannya setiap hari',3],['Menempelkan SOP di papan pengumuman saja',1],['Menunggu sampai ada staf yang bertanya',0],['Menerapkan sebagian yang saya anggap paling penting saja agar tim tidak terbebani',0]]]);
+B4S.COA.push(
+['Staf Anda menangis setelah dimarahi tamu.',[['Memberinya waktu tenang, lalu mendengarkannya',3],['Menyuruhnya segera kembali bekerja karena tamu sedang ramai',0],['Mengatakan bahwa ia terlalu sensitif',0],['Memindahkannya ke tugas lain tanpa membahas kejadian itu',1]]],
+['Hasil evaluasi kinerja seorang staf buruk, dan Anda harus menyampaikannya.',[['Menyampaikannya secara pribadi, disertai data dan contoh, lalu menyusun rencana perbaikan bersama',3],['Menyampaikannya lewat pesan singkat',0],['Melunakkan hasil evaluasinya agar ia tidak kecewa dan tetap bersemangat bekerja',1],['Meminta HRD yang menyampaikannya',1]]],
+['Seorang staf ingin naik jabatan, tetapi menurut Anda ia belum siap.',[['Menjelaskan hal yang perlu dikembangkan',3],['Mengatakan bahwa ia tidak akan pernah siap',0],['Memberinya harapan bahwa ia akan segera naik jabatan agar tetap bersemangat',0],['Menghindari pembicaraan tentang hal itu',0]]],
+['Dua staf baru bergabung bersamaan di tengah musim ramai.',[['Menyiapkan orientasi dan pendamping',3],['Langsung memberi jadwal penuh tanpa pengenalan kerja',0],['Membiarkan mereka hanya mengamati selama sebulan',1],['Menyerahkan pelatihan mereka sepenuhnya ke HRD',1]]],
+['Staf berprestasi di tim Anda mulai terlihat jenuh dan kurang bersemangat.',[['Mengajaknya bicara dan memberi peran baru',3],['Membiarkannya saja, karena kinerjanya masih memenuhi target bulanan',0],['Menegurnya karena kurang bersemangat',1],['Menambahkan pekerjaan rutin kepadanya',0]]],
+['Anda mendapat keluhan bahwa seorang staf sering bersikap tidak sopan kepada rekannya.',[['Memastikan faktanya, lalu membicarakannya secara pribadi',3],['Langsung memberi surat peringatan tanpa klarifikasi, karena keluhan sudah cukup jelas',1],['Menyampaikannya di depan tim sebagai pelajaran',0],['Mengabaikannya karena staf itu produktif',0]]]);
+B4S.KON.push(
+['Staf Anda menolak bekerja sama dengan staf departemen lain karena masalah pribadi.',[['Menegaskan bahwa urusan pribadi tidak boleh mengganggu kerja',3],['Membiarkan mereka tidak bekerja sama',0],['Memindahkan staf saya ke shift lain tanpa membicarakannya terlebih dahulu dengan siapa pun',1],['Membela staf saya di depan departemen lain',0]]],
+['Beredar isu yang tidak benar di tim tentang pembagian service charge.',[['Menjelaskan faktanya secara terbuka kepada tim',3],['Membiarkan isu itu reda dengan sendirinya',0],['Mencari tahu siapa yang menyebarkan isu itu untuk diberi hukuman yang tegas',1],['Menjelaskannya hanya kepada yang bertanya',1]]],
+['Atasan Anda membuat keputusan yang menurut Anda akan merugikan tim.',[['Menyampaikan pendapat dan data secara sopan, lalu tetap menjalankan keputusan akhirnya',3],['Menjalankannya sambil mengeluh di depan tim',0],['Menolak menjalankannya',0],['Diam dan menjalankannya tanpa memberi masukan, karena keputusan atasan harus diikuti',1]]],
+['Seorang tamu langganan sering bersikap kasar kepada staf wanita Anda.',[['Melindungi staf, menegur tamu dengan sopan tapi tegas, dan melaporkannya ke manajemen',3],['Meminta staf bersabar menghadapinya karena ia tamu langganan yang sering menginap',0],['Mengganti staf yang melayaninya tanpa tindak lanjut',1],['Mengabaikannya agar tamu tidak pindah hotel',0]]],
+['Dua staf senior di tim Anda sama-sama ingin menjadi koordinator shift.',[['Menetapkan kriteria yang jelas, memilih secara adil, lalu menjelaskan keputusannya',3],['Memilih yang paling dekat dengan saya',0],['Menunda keputusan sampai situasi tenang agar tidak ada yang merasa kecewa',0],['Membiarkan mereka bergantian tanpa aturan',1]]],
+['Seorang staf mengancam akan keluar jika tuntutannya tidak dipenuhi.',[['Mendengarkan tuntutannya dan menjawab sesuai kebijakan',3],['Langsung menuruti tuntutannya, karena kehilangan staf berpengalaman akan merugikan tim',0],['Menyuruhnya keluar saja',0],['Meneruskannya ke HRD tanpa mendengarkan dulu',1]]]);
+B4S.KEP.push(
+['Seorang tamu terjatuh di area kolam dan terluka.',[['Memberi pertolongan pertama dan memanggil tim medis',3],['Menunggu manajer datang sebelum bertindak',0],['Menyarankan tamu pergi ke rumah sakit sendiri',0],['Mengamankan area kolam terlebih dahulu, pertolongan untuk tamu diberikan kemudian',1]]],
+['Sistem reservasi mati saat banyak tamu mengantre check-in.',[['Beralih ke prosedur manual dan menghubungi IT',3],['Meminta semua tamu menunggu di lobi sampai sistem pulih kembali seperti biasa',0],['Memberikan kamar tanpa pencatatan apa pun',0],['Menelepon atasan lalu menunggu instruksi',1]]],
+['Terjadi overbooking sehingga satu tamu tidak mendapat kamar.',[['Meminta maaf, mencarikan kamar setara di hotel lain, dan menanggung biayanya sesuai kebijakan',3],['Mengatakan itu kesalahan sistem, lalu meminta tamu mencari hotel lain sendiri',0],['Memberikan kamar yang belum siap dibersihkan',0],['Menawarkan potongan harga tanpa mencarikan kamar',1]]],
+['Beberapa tamu melaporkan gejala keracunan makanan setelah sebuah acara.',[['Menangani tamu, mengamankan sampel, dan melapor',3],['Menunggu sampai ada lebih banyak laporan',0],['Membuang sisa makanan agar tidak ketahuan',0],['Meminta maaf kepada tamu yang mengeluh, tanpa melakukan tindakan lain pada makanan',1]]],
+['Seorang staf tidak datang tanpa kabar, padahal ia satu-satunya petugas di posnya.',[['Segera mencari pengganti atau mengisi sendiri',3],['Membiarkan pos itu kosong sementara',0],['Menunggu sampai staf itu datang',0],['Melaporkannya ke HRD saja dan membiarkan HRD yang mengurus ketidakhadirannya',1]]],
+['Klien acara meminta perubahan besar dua jam sebelum acara dimulai.',[['Menilai kemampuan tim dan menawarkan pilihan',3],['Menolak semua perubahan',1],['Menyetujui semua perubahan tanpa memastikan kemampuan tim agar klien tetap puas',0],['Menunggu keputusan manajer',1]]]);
+B4S.BIS=[
+['Biaya operasional departemen Anda naik 15% dalam tiga bulan.',[['Menganalisis pos biaya terbesar, mencari penyebabnya, dan menyusun rencana efisiensi',3],['Memotong lembur semua staf tanpa analisis, karena lembur adalah biaya terbesar',1],['Menunggu evaluasi di akhir tahun',0],['Meminta tambahan anggaran tanpa analisis',0]]],
+['Tingkat hunian turun dibandingkan tahun lalu.',[['Mempelajari data pasar, lalu menyusun strategi',3],['Menurunkan harga kamar besar-besaran tanpa perhitungan agar cepat menarik tamu',0],['Menunggu musim ramai berikutnya',0],['Menambah promosi tanpa target yang jelas',1]]],
+['Pemasok baru menawarkan harga 20% lebih murah.',[['Membandingkan kualitas dan syaratnya dulu',3],['Langsung berganti ke pemasok baru, karena penghematan 20% sudah sangat besar',1],['Menolak karena sudah nyaman dengan pemasok lama',0],['Meminta komisi pribadi dari pemasok baru',0]]],
+['Anda menyusun anggaran departemen untuk tahun depan.',[['Menyusunnya berdasarkan data tahun lalu, target, dan rencana kegiatan yang jelas dan terukur',3],['Menyalin anggaran tahun lalu, lalu menambah 10% untuk mengantisipasi kenaikan harga',1],['Mengajukan anggaran sebesar mungkin agar aman',0],['Menyerahkannya sepenuhnya ke bagian accounting',0]]],
+['Banyak ulasan online tamu mengeluhkan kebersihan kamar.',[['Menganalisis pola keluhan dan memperbaiki prosesnya',3],['Membalas setiap ulasan dengan permintaan maaf yang sopan, tanpa perubahan lainnya',1],['Menyalahkan tamu yang terlalu menuntut',0],['Meminta staf menulis ulasan positif palsu',0]]],
+['Pendapatan F&B berada di bawah target selama dua bulan.',[['Menganalisis menu, harga, dan biaya bahan',3],['Menaikkan semua harga menu',0],['Mengganti seluruh menu dengan menu baru tanpa melihat data penjualan sebelumnya',1],['Menunggu hasil bulan depan',0]]],
+['Ada usulan membeli mesin baru yang mahal, tetapi bisa menghemat tenaga kerja.',[['Menghitung biaya dan waktu balik modalnya dulu',3],['Langsung menyetujuinya karena teknologi baru pasti membuat kerja lebih efisien',0],['Menolak karena harganya mahal, tanpa menghitung',0],['Meminta pendapat staf saja',1]]],
+['Laporan stok menunjukkan selisih barang yang besar setiap bulan.',[['Melakukan audit dan menelusuri penyebab selisih',3],['Menyesuaikan angka laporan agar terlihat seimbang',0],['Menganggapnya sebagai hal yang wajar',0],['Menegur bagian gudang dengan tegas tanpa melakukan audit, agar mereka lebih teliti',1]]],
+['Manajemen meminta pendapatan naik 10% tanpa tambahan staf.',[['Menyusun strategi dengan target yang terukur',3],['Menolak target karena dianggap tidak realistis',0],['Menerima target tanpa menyusun rencana',0],['Membebankan seluruh target tambahan kepada tim penjualan, karena itu tugas mereka',1]]],
+['Klien korporat besar meminta harga khusus di bawah biaya operasional.',[['Menghitung untung-ruginya, lalu bernegosiasi',3],['Langsung menyetujuinya agar klien besar itu tidak pindah ke hotel pesaing',0],['Langsung menolak tanpa negosiasi',1],['Menyetujui, lalu diam-diam mengurangi kualitas layanan',0]]],
+['Pemakaian listrik dan air hotel melonjak.',[['Mengaudit pemakaian, mencari kebocoran atau pemborosan, dan menjalankan program hemat energi',3],['Mematikan AC di area tamu agar hemat',0],['Menganggapnya sebagai biaya biasa',0],['Mengirim imbauan hemat energi kepada semua karyawan tanpa pemantauan lebih lanjut',1]]],
+['Anda menemukan harga pembelian sebuah barang jauh di atas harga pasar.',[['Menelusuri proses pembeliannya dan melaporkannya',3],['Membiarkannya karena bukan urusan departemen saya',0],['Langsung menuduh bagian purchasing bermain harga tanpa memeriksa datanya dulu',1],['Membicarakannya di grup karyawan',0]]]];
+LIE.length===10||console.warn('LIE');
+
+// ================= PEMILIHAN SOAL =================
+function rngOf(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
+function shuffle(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const range=n=>[...Array(n).keys()];
+const isLead=lv=>lv!=='S';
+// Komposisi per level: s1=[positif,dibalik] per aspek, s2=situasi integritas per aspek, s3=minat per tipe, s4=situasi kepemimpinan per aspek
+const CFG={S:{s1:[2,1],s2:2,s3:3,s4:0,bis:0},CPT:{s1:[2,2],s2:2,s3:2,s4:3,bis:0},SPV:{s1:[2,2],s2:3,s3:2,s4:4,bis:0},MGR:{s1:[2,2],s2:3,s3:2,s4:5,bis:1}};
+function buildItems(seed,lv){
+ const C=CFG[lv]||CFG.S,rnd=rngOf(seed),it=[];
+ const sit=(s,k,src)=>({s,k,q:src[0],o:src[1],ord:shuffle(range(src[1].length),rnd)});
+ const per={},n1=C.s1[0]+C.s1[1];
+ Object.keys(B1).forEach(k=>{const p=shuffle(B1[k].p,rnd).slice(0,C.s1[0]).map(q=>[q,0]),r=shuffle(B1[k].r,rnd).slice(0,C.s1[1]).map(q=>[q,1]);per[k]=shuffle(p.concat(r),rnd);});
+ const lie=shuffle(LIE,rnd).slice(0,3),lieAt=n1===3?[0,1]:[0,2];
+ const tk=Object.keys(B1);
+ for(let r=0;r<n1;r++){shuffle(tk,rnd).forEach(k=>it.push({s:1,k,q:per[k][r][0],rev:per[k][r][1]}));const li=lieAt.indexOf(r);if(li>=0)it.push({s:1,k:'VAL',q:lie[li],rev:0});}
+ const ik=Object.keys(B2L);const l2=shuffle(ik,rnd).map(k=>{const x=shuffle(B2L[k],rnd)[0];return {s:2,k,q:x[0],rev:x[1]};});
+ l2.splice(2,0,{s:2,k:'VAL',q:lie[2],rev:0});l2.splice(5,0,{s:2,k:'ATT',q:'Untuk memastikan Anda membaca soal dengan teliti, pilih jawaban "Tidak sesuai" pada soal ini.',want:2});
+ it.push(...l2);
+ const sc={};ik.forEach(k=>sc[k]=shuffle(B2S[k],rnd).slice(0,C.s2));
+ for(let r=0;r<C.s2;r++)shuffle(ik,rnd).forEach(k=>it.push(sit(2,k,sc[k][r])));
+ const mk=Object.keys(B3),m={};mk.forEach(k=>m[k]=shuffle(B3[k],rnd).slice(0,C.s3));
+ const s3=[];for(let r=0;r<C.s3;r++)shuffle(mk,rnd).forEach(k=>s3.push({s:3,k,q:m[k][r],rev:0}));
+ s3.splice(Math.min(9,s3.length-3),0,{s:3,k:'ATT',q:'Untuk soal ini, pilih jawaban "Suka".',want:4});it.push(...s3);
+ if(C.s4){const lk=['DEL','COA','KON','KEP'].concat(C.bis?['BIS']:[]),s4={};lk.forEach(k=>s4[k]=shuffle(B4S[k],rnd).slice(0,C.s4));
+  for(let r=0;r<C.s4;r++)shuffle(lk,rnd).forEach(k=>it.push(sit(4,k,s4[k][r])));}
+ return it;
+}
+const SES={
+1:{nm:'Gaya kerja',scale:L_SES,ins:'Pilih seberapa sesuai pernyataan dengan diri Anda yang sebenarnya di tempat kerja.'},
+2:{nm:'Sikap & situasi kerja',scale:L_SES,ins:'Bagian awal: pilih seberapa sesuai pernyataan. Bagian berikutnya: pilih tindakan yang paling mungkin Anda lakukan dalam situasi tersebut.'},
+3:{nm:'Minat kerja',scale:L_SUKA,ins:'Pilih seberapa Anda suka melakukan kegiatan tersebut, walaupun belum pernah melakukannya. Pikirkan rasa suka, bukan kemampuan.'},
+4:{nm:'Kepemimpinan',scale:L_SES,ins:'Sesi khusus Captain, Supervisor, dan Manager. Bayangkan Anda sebagai atasan dalam setiap situasi, lalu pilih tindakan yang paling mungkin Anda lakukan.'}};
+const sesInfo=items=>{const c={},st={};items.forEach((x,i)=>{c[x.s]=(c[x.s]||0)+1;if(st[x.s]===undefined)st[x.s]=i;});return {c,st,list:Object.keys(c).map(Number)};};
+const FAST_PER_ITEM=4.3;
+const SENS=['ACC','SEC','HK','FO','FBS'];
+// ================= UTIL =================
+const app=document.getElementById('app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+function copy(txt){try{navigator.clipboard.writeText(txt).then(()=>toast('Disalin'),()=>toast('Gagal menyalin, salin manual'));}catch(e){toast('Gagal menyalin, salin manual')}}
+const lvl=v=>v>=70?'Tinggi':v>=45?'Sedang':'Rendah';
+const fitLbl=v=>v>=75?'Sangat sesuai':v>=60?'Sesuai':v>=45?'Cukup sesuai':'Kurang sesuai';
+const cls=v=>v>=60?'ok':v>=45?'warn':'bad';
+const col=v=>v>=70?'#1f8a5b':v>=45?'#c27c0e':'#c2410c';
+const norm=(avg)=>Math.round((avg-1)/4*100);
+
+const PUBKEY='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyn1TOOrtrdAI/uAQVbxxyiL2yMb2xunrkiJimCF4ZqFaW3j9ZBRlE5Q1N4On8Jrp2YlrwVo7G/tZh/F9trAmSgvkvjCATZg/ZvZTxi8jkHsh+CEud2iSvB/MkJ4H1EeI7Io+B/Sc932fZVEGToF5OJSdNYFsoOGlMgOZcY5gqMSr7+lCd6alR3xJUtd/xBiD4AkOr9O/iACL1KP10H4Q9/wFDcj+XamrLZAmTr5x77zn/7FwOxndZJH01J3C/8ZfiW+KcsidxbztiB7tQXcJ87eCdTsFBy8CA6ywA/X6HhYwk1dyVqlvIi/UI90O7X3Hk/5hfzgkBCpfHL/3xku2LQIDAQAB';
+const VAULT={salt:'XxzgXhAhIluIyvf4XE4muQ==',iv:'jx9v1O0IoKJvYRIm',iter:310000,data:'bm7xozHvXVoTDUlf8IQpAyH9rntlC5c+Dx5oIw6YaWWss1JT+YhaMOVukSQK+lE3BPw2S7uJilDLHPukR0NG+6jMrCvmwiBBFj1eWLLrijLmVdy4u0YF33SbB9JU1ljNgT9kktfNXqDfRkgofpHOjX2UpuFszuDttSutbDuB8tugWuo+GZ8O/HEjzIDbbZuYDUCiLQgNYyrMUE2FFdNdNK4ODY6PjtMymOYHfLgojk1YxPyjRf944yBJqp1+Cdowy4xayuAtAMRwybWrK5SLvhswpxLjOnOzKhyi7ienTSn7q2G/J0fykusvjIbYR52DwmKNu7YLhWzmahzJuH+lAj5F0pCImiYQlthUP4QxCEtLk6v5gBBGELfc490BxZPlC9RtTryocFSmG+ggi2wXcmjdLgO8/Q8pByNTNOCH18sivKpLJ6PfKhc6UfP1Hr8bMqNQE4wPezI0iowlqc8c7qD0+n5GE2753ddWfoyAJ+FJ3C22KxKbylDnR6Wjh0dJbUslfNHMzdX2TRt7cc0oRkLFITE4V5z7R8NV0QXoAVc3HgPSHSzlYIsuH6CtQhSiaurvDEVSDfQlmnyhKnNE5nvZBzpzXRSj46ZgwHfAtVeZvWvTsQmQ0vZgXM8967pofhB2BOx1idmCFwxx6VPzmN6o2qVhBnnMu7smqyht5ud0+kqWXXcVbXuj6rpbhMap8icMiVLT9VCNsSE0ULWAJxT7fHgt+fzcNsiUc8wpT52rHy3d+5+2JeRdbJeDlpHIi5w2jm0mpbKFkLVb1ticFV2cROP8b7qc2AAy22HDVO4xsz+9efv+3fo92kheMgaO/SYl5BMzsPnW5Rei7tBzgXE8Hl8jcmUVLTlWYI5i2/xZUY3/psiRMjuslbbw5P8ARsSjASFF87V2T9cxlBS0XkSP8g0UIDJPK7Jp2kT4Yr0jkUspvmG+lg+kn5J+BLvhAdRZ1ne8frYOPIY2cGJF/iX4TfHtiLSGEN2ETzSM5nP7KjnP/VuiOdojUBNQqnD03+KKiKNQrUcfqc/lddlqguoXps3FemxNTpvnTHVxrrj1V4V9wRcZpNdpQreI3NfVTD6zNnasVzzfxoNwhEBvv9f0XXESXhswGrLj992Dmklwwsihp6wEAttZumpMChOgAIz/NAxtlq8WPecpe9lOwGcgjFNix8BlTY8+bdxZA9syfN8UKMydxZW1lt58VLuJm1t+bp1eUGC0lG6ifjPEuVs99apJj1Ygcd+xbYcx3ZYOGe/ICRWIgV1ZO0wZ8GznOWMnF/OzIHR2MZuu20qJMlnqULO2Vl5FMJU/jJzxUaPwPE+NVZ05Dtap3TztZDtS4nB1bRY5dYaTZvmV5eNwR5nGwl5Kr5++ToYejqu+78xXUwo24PQXnKAE1QrzWptqxuQNlauc2/HJ3eBC1CuRacydeR/eW8rSi4yElSl64Lm3Vf8TxPTetyogEZEQ92db8VIOIyfdRoOGEHBnr6kiw8i1JadoSXO8QUC3fR8sfwNvSe306bN1BOWnVmZm8miMM9oGdCBmgVapo3rwJTSjCLGqJ+vmPzx23HEaKwjMyvfb3jUZfZ0H+SkrlJOuu+nh6srErCsK41j31+PkERd83R+CJAM2PvW2hPHFhBzntmYl'};
+// Kode hasil dienkripsi (RSA-OAEP 2048 + AES-GCM 256). Hanya bisa dibuka di mode HRD dengan password.
+const te=new TextEncoder(),td=new TextDecoder();
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const b64u=buf=>{let s='';new Uint8Array(buf).forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
+const b64ud=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return b64d(s);};
+const hasCrypto=()=>!!(window.crypto&&crypto.subtle);
+async function encryptPayload(obj){
+ const S=crypto.subtle;
+ const pub=await S.importKey('spki',b64d(PUBKEY),{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);
+ const k=await S.generateKey({name:'AES-GCM',length:256},true,['encrypt']);
+ const ek=await S.encrypt({name:'RSA-OAEP'},pub,await S.exportKey('raw',k));
+ const iv=crypto.getRandomValues(new Uint8Array(12));
+ const ct=await S.encrypt({name:'AES-GCM',iv},k,te.encode(JSON.stringify(obj)));
+ return 'HT5.'+b64u(ek)+'.'+b64u(iv)+'.'+b64u(ct);
+}
+async function unlockKey(pw){
+ const S=crypto.subtle;
+ const base=await S.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveKey']);
+ const key=await S.deriveKey({name:'PBKDF2',salt:b64d(VAULT.salt),iterations:VAULT.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+ const pk=await S.decrypt({name:'AES-GCM',iv:b64d(VAULT.iv)},key,b64d(VAULT.data));
+ return S.importKey('pkcs8',pk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+}
+const CODE_RE=/HT5\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)/;
+async function decode(text,priv){
+ const m=(text||'').replace(/\s+/g,'').match(CODE_RE);
+ if(!m)throw new Error('Kode tidak ditemukan. Pastikan seluruh kode tersalin, diawali "HT5."');
+ let o;
+ try{const S=crypto.subtle;const raw=await S.decrypt({name:'RSA-OAEP'},priv,b64ud(m[1]));
+  const k=await S.importKey('raw',raw,{name:'AES-GCM'},false,['decrypt']);
+  o=JSON.parse(td.decode(await S.decrypt({name:'AES-GCM',iv:b64ud(m[2])},k,b64ud(m[3]))));}
+ catch(e){throw new Error('Kode tidak valid, terpotong, atau telah diubah.');}
+ if(!o.a||o.sd==null)throw new Error('Isi kode tidak lengkap.');
+ if(o.b!==BANK_VER)throw new Error('Kode ini berasal dari versi tes yang berbeda. Buka dengan file tes versi yang sama saat peserta mengerjakan.');
+ o.items=buildItems(o.sd,o.lv);
+ if(o.a.length!==o.items.length)throw new Error('Jawaban dalam kode tidak lengkap.');
+ o.code=m[0];return o;
+}
+
+// ================= SKOR =================
+function analyze(o){
+ const a=o.a.split('').map(Number),IT=o.items;
+ const sum={},cnt={},sit={},sitn={},crit=[],critL=[];
+ IT.forEach((it,i)=>{const k=it.k;if(k==='VAL'||k==='ATT')return;const key=it.s+k;
+  if(it.o){const op=it.o[a[i]-1];sit[key]=(sit[key]||0)+op[1];sitn[key]=(sitn[key]||0)+1;if(op[1]===0)(it.s===4?critL:crit).push([it.q,op[0]]);}
+  else{sum[key]=(sum[key]||0)+(it.rev?6-a[i]:a[i]);cnt[key]=(cnt[key]||0)+1;}});
+ const avg=key=>norm(sum[key]/cnt[key]);
+ const mix=key=>{const sp=sit[key]/(3*sitn[key])*100;return Math.round(cnt[key]?avg(key)/3+sp*2/3:sp);};
+ const IN={};Object.keys(IN_TR).forEach(k=>IN[k]=mix('2'+k));
+ const inTot=Math.round(Object.values(IN).reduce((x,y)=>x+y,0)/Object.keys(IN).length);
+ const PK={};['TEL','TEN','KER','SOS','TER','LAY'].forEach(k=>PK[k]=avg('1'+k));PK.INT=inTot;
+ const MN={};Object.keys(MN_TR).forEach(k=>MN[k]=avg('3'+k));
+ let LD=null,ldTot=null;
+ if(IT.some(x=>x.s===4)){LD={};Object.keys(LD_TR).filter(k=>sitn['4'+k]).forEach(k=>LD[k]=mix('4'+k));const lv=Object.values(LD);ldTot=Math.round(lv.reduce((x,y)=>x+y,0)/lv.length);}
+ const fitP={},fitM={},fin={};
+ DK.forEach(d=>{let s=0;for(const k in PK_W[d])s+=PK_W[d][k]*PK[k];fitP[d]=Math.round(s);
+  s=0;for(const k in MN_W[d])s+=MN_W[d][k]*MN[k];fitM[d]=Math.round(s);fin[d]=Math.round(.6*fitP[d]+.4*fitM[d]);});
+ if(inTot<60)SENS.forEach(x=>{fin[x]=Math.min(fin[x],44);});
+ const rank=DK.slice().sort((x,y)=>fin[y]-fin[x]);
+ const mtop=Object.keys(MN).sort((x,y)=>MN[y]-MN[x]);
+ const f=[];
+ const lie=IT.map((x,i)=>x.k==='VAL'?a[i]:null).filter(v=>v!==null);const lv=lie.reduce((x,y)=>x+y,0)/lie.length;
+ if(lv>=4.5)f.push(['bad','Menjawab terlalu ideal (skor kesan baik '+lv.toFixed(1)+'/5). Skor lain kemungkinan lebih tinggi dari kenyataan.']);
+ else if(lv>=4)f.push(['warn','Ada kecenderungan menjawab agar terlihat baik. Tafsirkan skor tinggi dengan hati-hati.']);
+ const attWrong=IT.filter((x,i)=>x.k==='ATT'&&a[i]!==x.want).length;
+ if(attWrong)f.push([attWrong>1?'bad':'warn',attWrong+' dari 2 soal pengecekan perhatian dijawab salah. Peserta mungkin tidak membaca soal dengan teliti.']);
+ const lk=a.filter((v,i)=>!IT[i].o);const fr=[0,0,0,0,0,0];lk.forEach(v=>fr[v]++);
+ if(Math.max(...fr)/lk.length>=.7)f.push(['warn','Sebagian besar jawaban sama ('+Math.round(Math.max(...fr)/lk.length*100)+'%). Kemungkinan menjawab asal.']);
+ if(o.s&&o.s<IT.length*FAST_PER_ITEM)f.push(['warn','Diselesaikan sangat cepat ('+(Math.round(o.s/6)/10)+' menit). Kemungkinan kurang membaca soal.']);
+ const valid=(f.some(x=>x[0]==='bad')||f.length>=2)?'bad':f.length?'warn':'ok';
+ return {PK,IN,inTot,MN,mtop,LD,ldTot,fitP,fitM,fin,rank,crit,critL,flags:f,valid};
+}
+const inLbl=v=>v>=75?'Tinggi':v>=60?'Cukup':'Rendah';
+const ldLbl=v=>v>=75?'Siap':v>=60?'Cukup siap':'Belum siap';
+const inRec=v=>v>=75?'Direkomendasikan':v>=60?'Dapat dipertimbangkan dengan pengawasan':'Perlu pendalaman serius';
+
+// ================= LAPORAN =================
+function buildReport(o){
+ const r=analyze(o),d=o.d,B=[];
+ B.push({t:'kv',a:[['Nama',o.n],['Jabatan',o.j],['Level',LV[o.lv]||'Staff'],['Departemen',DEPTS[d].n],['Tujuan',PURP[o.p]],['Tanggal tes',o.t],['Durasi',o.s?(Math.round(o.s/6)/10)+' menit':'-']]});
+ B.push({t:'h',s:'Kesimpulan'});
+ B.push({t:'badge',s:'Kesesuaian dengan '+DEPTS[d].n+': '+r.fin[d]+'/100 | '+fitLbl(r.fin[d]),c:cls(r.fin[d])});
+ B.push({t:'badge',s:'Integritas: '+r.inTot+'/100 | '+inLbl(r.inTot),c:r.inTot>=75?'ok':r.inTot>=60?'warn':'bad'});
+ if(r.LD)B.push({t:'badge',s:'Kesiapan memimpin: '+r.ldTot+'/100 | '+ldLbl(r.ldTot),c:r.ldTot>=75?'ok':r.ldTot>=60?'warn':'bad'});
+ B.push({t:'badge',s:'Validitas jawaban: '+(r.valid==='ok'?'Valid':r.valid==='warn'?'Valid dengan catatan':'Perlu dikonfirmasi'),c:r.valid});
+ let c='';const f=r.fin[d];
+ if(r.valid==='bad')c+='Hasil perlu dikonfirmasi ulang karena ada indikasi jawaban tidak konsisten. Disarankan tes ulang atau wawancara mendalam. ';
+ c+=f>=60?`Profil peserta ${fitLbl(f).toLowerCase()} dengan ${DEPTS[d].n}. `:f>=45?`Profil peserta cukup sesuai dengan ${DEPTS[d].n}; perlu pendalaman dan pendampingan. `:`Profil peserta kurang sesuai dengan ${DEPTS[d].n}. Pertimbangkan ${r.rank.filter(x=>x!==d).slice(0,2).map(x=>DEPTS[x].n).join(' atau ')}. `;
+ if(f>=45){const top=r.rank[0],gap=r.fin[top]-f;
+  if(top===d)c+='Departemen yang dituju adalah yang paling sesuai. ';
+  else if(gap<=5)c+=`Skor ${DEPTS[d].n} hampir sama dengan ${DEPTS[top].n} (selisih ${gap} poin, tidak bermakna), jadi keduanya sama-sama cocok dan penempatan di ${DEPTS[d].n} sudah tepat. `;
+  else if(gap<=10)c+=`${DEPTS[top].n} sedikit lebih cocok (selisih ${gap} poin); bisa menjadi alternatif penempatan atau jalur pengembangan karier. `;
+  else c+=`${DEPTS[top].n} jauh lebih cocok (selisih ${gap} poin); pertimbangkan penempatan atau rotasi ke departemen tersebut. `;}
+ const pf=r.fitP[d],mf=r.fitM[d];
+ if(pf>=60&&mf<45)c+='Secara sifat kerja mampu, tetapi minatnya pada bidang ini rendah, sehingga ada risiko cepat bosan atau tidak betah. ';
+ else if(pf<45&&mf>=60)c+='Minatnya tinggi pada bidang ini, tetapi sifat kerjanya belum sesuai. Berpotensi berkembang dengan pelatihan dan pendampingan. ';
+ c+=r.inTot>=75?'Sikap integritas baik. ':r.inTot>=60?'Sikap integritas cukup; ada beberapa hal yang perlu ditegaskan. ':'Sikap integritas rendah. Tidak disarankan ditempatkan di posisi yang memegang uang, kunci, atau barang tamu sebelum pendalaman. ';
+ if(r.crit.length)c+=`Ada ${r.crit.length} jawaban situasi integritas yang kritis. `;
+ if(r.LD)c+=r.ldTot>=75?`Kesiapan memimpin baik untuk level ${LV[o.lv]}. `:r.ldTot>=60?`Kesiapan memimpin cukup; perlu pembinaan di beberapa aspek kepemimpinan. `:`Kesiapan memimpin belum memadai untuk level ${LV[o.lv]}; pertimbangkan pelatihan kepemimpinan atau masa pendampingan. `;
+ B.push({t:'p',s:c.trim()});
+ B.push({t:'p',s:'Departemen paling sesuai: '+r.rank.slice(0,3).map(x=>DEPTS[x].n+' ('+r.fin[x]+')').join(', '),b:1});
+ if(r.flags.length){B.push({t:'h',s:'Catatan validitas'});B.push({t:'li',a:r.flags.map(x=>x[1])});}
+ B.push({t:'h',s:'Rekomendasi departemen'});
+ r.rank.forEach(x=>B.push({t:'bar',l:DEPTS[x].n+(x===d?' (dituju)':'')+(r.inTot<60&&SENS.includes(x)?' *':''),v:r.fin[x],r:r.fin[x]+' | '+fitLbl(r.fin[x])}));
+ B.push({t:'p',s:'Skor gabungan: 60% gaya kerja (sesuai sifat kerja) + 40% minat kerja (rasa suka).'+(r.inTot<60?' Tanda * = posisi yang memegang uang/barang tamu; tunda sampai integritas didalami.':''),sm:1});
+ B.push({t:'h',s:'Sesi 1 - Gaya kerja'});
+ for(const k in PK_TR){const v=r.PK[k];B.push({t:'bar',l:PK_TR[k].n+(k==='INT'?' (dari sesi 2)':''),v,r:v+' | '+lvl(v),d:v>=70?PK_TR[k].hi:v>=45?PK_TR[k].md:PK_TR[k].lo});}
+ B.push({t:'h',s:'Sesi 2 - Integritas'});
+ B.push({t:'p',s:'Skor total '+r.inTot+'/100 ('+inLbl(r.inTot)+'). Rekomendasi: '+inRec(r.inTot)+'.',b:1});
+ for(const k in IN_TR){const v=r.IN[k];B.push({t:'bar',l:IN_TR[k].n,v,r:v+' | '+inLbl(v)});}
+ if(r.crit.length){B.push({t:'p',s:'Jawaban situasi yang kritis (wajib ditanyakan):',b:1});B.push({t:'li',a:r.crit.map(x=>x[0]+' Jawaban: "'+x[1]+'"')});}
+ else B.push({t:'p',s:'Tidak ada jawaban situasi yang kritis.',sm:1});
+ B.push({t:'h',s:'Sesi 3 - Minat kerja'});
+ B.push({t:'p',s:'Minat utama: '+r.mtop.slice(0,3).map(k=>MN_TR[k].n).join(', ')+'.',b:1});
+ r.mtop.forEach(k=>{const v=r.MN[k];B.push({t:'bar',l:MN_TR[k].n,v,r:v+' | '+lvl(v),d:MN_TR[k].d});});
+ if(r.LD){B.push({t:'h',s:'Sesi 4 - Kepemimpinan'});
+  B.push({t:'p',s:'Skor total '+r.ldTot+'/100 ('+ldLbl(r.ldTot)+').',b:1});
+  for(const k in r.LD){const v=r.LD[k];B.push({t:'bar',l:LD_TR[k].n,v,r:v+' | '+inLbl(v)});}
+  if(r.critL.length){B.push({t:'p',s:'Respons kepemimpinan yang kritis:',b:1});B.push({t:'li',a:r.critL.map(x=>x[0]+' Jawaban: "'+x[1]+'"')});}}
+ const str=[],dev=[],qs=[];
+ const s=Object.keys(PK_TR).filter(k=>k!=='INT').sort((x,y)=>r.PK[y]-r.PK[x]);
+ s.filter(k=>r.PK[k]>=70).forEach(k=>str.push(PK_TR[k].n+': '+PK_TR[k].hi));
+ if(r.inTot>=75)str.push('Integritas: sikap jujur dan patuh aturan terlihat konsisten.');
+ str.push('Minat terkuat: '+MN_TR[r.mtop[0]].n+' - '+MN_TR[r.mtop[0]].d);
+ s.slice().reverse().filter(k=>r.PK[k]<60).slice(0,3).forEach(k=>{dev.push(PK_TR[k].n+': '+PK_TR[k].dev);qs.push(PK_TR[k].q);});
+ Object.keys(IN_TR).sort((x,y)=>r.IN[x]-r.IN[y]).filter(k=>r.IN[k]<70).slice(0,2).forEach(k=>{dev.push(IN_TR[k].n+': '+IN_TR[k].dev);qs.push(IN_TR[k].q);});
+ if(r.LD){Object.keys(r.LD).sort((x,y)=>r.LD[x]-r.LD[y]).filter(k=>r.LD[k]<70).slice(0,2).forEach(k=>{dev.push(LD_TR[k].n+': '+LD_TR[k].dev);qs.push(LD_TR[k].q);});
+  if(r.ldTot>=75)str.push('Kepemimpinan: respons sebagai atasan matang dan terarah.');}
+ B.push({t:'h',s:'Kekuatan'});B.push({t:'li',a:str});
+ B.push({t:'h',s:'Area pengembangan'});B.push(dev.length?{t:'li',a:dev}:{t:'p',s:'Tidak ada aspek yang perlu perhatian khusus.',sm:1});
+ if(!qs.length)qs.push(PK_TR[s[s.length-1]].q,IN_TR.LAPOR.q);
+ B.push({t:'h',s:'Pertanyaan '+(o.p==='R'?'wawancara':'evaluasi')});B.push({t:'ol',a:qs});
+ B.push({t:'h',s:'Catatan untuk '+PURP[o.p].toLowerCase()});B.push({t:'p',s:PNOTE[o.p]});
+ B.push({t:'h',s:'Metode & sumber'});
+ B.push({t:'p',s:'Sesi 1: butir diadaptasi dari IPIP Big-Five Factor Markers (Goldberg, 1999; International Personality Item Pool, domain publik) ditambah butir orientasi pelayanan. Sesi 2: konstruk Honesty-Humility (IPIP-HEXACO; Ashton, Lee & Goldberg, 2007) dan situational judgment test berbasis kasus perhotelan; validitas tes integritas untuk memprediksi kinerja dan perilaku kontraproduktif: Ones, Viswesvaran & Schmidt (1993). Sesi 3: model minat RIASEC (Holland) dengan format aktivitas kerja seperti O*NET Interest Profiler.'+(r.LD?' Sesi 4: situational judgment test kepemimpinan'+(r.LD.BIS!=null?' termasuk aspek bisnis & keuangan':'')+'.':'')+' Soal situasi memakai instruksi "tindakan yang paling mungkin dilakukan" (McDaniel dkk., 2007). Soal dipilih acak dari bank soal v'+BANK_VER+' dengan komposisi tetap per aspek. Norma lokal belum tersedia; skor dibaca sebagai kecenderungan.',sm:1});
+ B.push({t:'sign'});
+ return {B,base:o,r};
+}
+const ICN={
+target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="#fff"/>',
+shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+people:'<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.2c3.3-.4 6 1.9 6 5.8"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',bars:'<path d="M6 20v-6M12 20V9M18 20V4"/>',
+building:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/>',
+star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+up:'<path d="M12 20V5M6 11l6-6 6 6"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+doc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>'};
+const svgI=(n,bg)=>`<i style="background:${bg}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICN[n]}</svg></i>`;
+const HCOL={ok:'#1f8a5b',warn:'#c27c0e',bad:'#c2410c'},HBG={ok:'#e3f4ec',warn:'#fdf1dc',bad:'#fde8df'};
+const SECI=[['Kesimpulan','target'],['Catatan validitas','alert'],['Rekomendasi','building'],['Sesi 1','bars'],['Sesi 2','shield'],['Sesi 3','bulb'],['Sesi 4','people'],['Kekuatan','star'],['Area','up'],['Pertanyaan','chat'],['Catatan untuk','doc'],['Metode','info']];
+function kpiHTML(R){const o=R.base,r=R.r,c=x=>x>=75?'ok':x>=60?'warn':'bad';
+ const vl={ok:'Valid',warn:'Valid dgn catatan',bad:'Perlu konfirmasi'};
+ const K=[{ic:'target',l:'Kesesuaian',s:DEPTS[o.d].n,v:r.fin[o.d],st:fitLbl(r.fin[o.d]),k:cls(r.fin[o.d])},{ic:'shield',l:'Integritas',s:'Kejujuran & kepatuhan',v:r.inTot,st:inLbl(r.inTot),k:c(r.inTot)},
+  r.LD?{ic:'people',l:'Kepemimpinan',s:'Kesiapan memimpin',v:r.ldTot,st:ldLbl(r.ldTot),k:c(r.ldTot)}:{ic:'bulb',l:'Minat utama',s:'Lalu: '+MN_TR[r.mtop[1]].n,w:MN_TR[r.mtop[0]].n,st:'Minat terkuat',k:'ok'},
+  {ic:'check',l:'Validitas',s:'Konsistensi jawaban',w:vl[r.valid],st:r.flags.length?r.flags.length+' catatan':'Tanpa catatan',k:r.valid}];
+ return `<div class="kpis">${K.map(x=>`<div class="kpi"><div class="t">${svgI(x.ic,HCOL[x.k])}<span>${x.l}<div class="sub" style="text-transform:none;letter-spacing:0;font-weight:500">${esc(x.s)}</div></span></div>${x.v!=null?`<div class="v" style="color:${HCOL[x.k]}">${x.v}<small>/100</small></div><div class="bar"><i style="width:${x.v}%;background:${HCOL[x.k]}"></i></div>`:`<div class="w" style="color:${HCOL[x.k]}">${esc(x.w)}</div>`}<span class="st" style="background:${HBG[x.k]};color:${HCOL[x.k]}">${x.st}</span></div>`).join('')}</div>
+ <div class="card"><div class="eyebrow" style="margin-bottom:10px">Departemen paling sesuai</div><div class="top3">${r.rank.slice(0,3).map((d,i)=>`<div><b class="n">${i+1}</b><span>${DEPTS[d].n}${d===o.d?' <small style="color:#b8892d;font-weight:800">· DITUJU</small>':''}</span><b style="color:${HCOL[cls(r.fin[d])]}">${r.fin[d]}</b></div>`).join('')}</div></div>`;}
+function reportHTML(B){
+ let h='',open=false;
+ const close=()=>{if(open){h+='</div>';open=false}};
+ B.forEach(b=>{
+  if(b.t==='h'){close();const si=SECI.find(x=>b.s.startsWith(x[0]));h+=`<div class="card"><h2 class="hd">${si?svgI(si[1],'#1d4e89'):''}${esc(b.s)}</h2>`;open=true;return;}
+  if(!open&&b.t!=='sign'){h+='<div class="card">';open=true;}
+  if(b.t==='kv')h+=b.a.map(([k,v])=>`<div class="row"><span class="muted">${k}</span><b>${esc(v)}</b></div>`).join('');
+  else if(b.t==='badge')h+=`<p><span class="badge b-${b.c}">${esc(b.s)}</span></p>`;
+  else if(b.t==='p')h+=`<p class="${b.sm?'note':''}" style="${b.b?'font-weight:700;':''}${b.c?'color:var(--'+b.c+')':''}">${esc(b.s)}</p>`;
+  else if(b.t==='li')h+=`<ul>${b.a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+  else if(b.t==='ol')h+=`<ol style="padding-left:20px">${b.a.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
+  else if(b.t==='bar')h+=`<div class="tr"><div class="h"><span>${esc(b.l)}</span><span style="color:${col(b.v)};white-space:nowrap">${esc(b.r)}</span></div><div class="bar"><i style="width:${b.v}%;background:${col(b.v)}"></i></div>${b.d?`<p>${esc(b.d)}</p>`:''}</div>`;
+ });
+ close();return h;
+}
+
+const LOGO={gz:{w:700,h:216,jpg:'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'},zhm:{w:600,h:74,jpg:'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'}};
+// ================= PDF (pembuat PDF sendiri, tanpa library luar) =================
+const FW={H:[278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584],B:[278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611, 611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556, 500, 389, 280, 389, 584],I:[278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584]};
+const FN={H:'Helvetica',B:'Helvetica-Bold',I:'Helvetica-Oblique'};
+const ascii=s=>String(s==null?'':s).replace(/[\u2013\u2014]/g,'-').replace(/[\u201C\u201D]/g,'"').replace(/[\u2018\u2019]/g,"'").replace(/\u00B7/g,'|').replace(/\u2026/g,'...').replace(/[\u00C0-\u00C5]/g,'A').replace(/[\u00E0-\u00E5]/g,'a').replace(/[\u00E8-\u00EB]/g,'e').replace(/[\u00C8-\u00CB]/g,'E').replace(/[^\x20-\x7E]/g,'');
+function MiniPDF(){
+ const W=595.28,H=841.89,pages=[],imgs={};let cur=null,curImgs=null;
+ const f=n=>(Math.round(n*100)/100).toString();
+ const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(f).join(' ');
+ const Y=y=>H-y;
+ const api={W,H,
+  page(){cur=[];curImgs=new Set();cur.imgs=curImgs;pages.push(cur);return api;},
+  image(key,x,y,w,h){if(!imgs[key])imgs[key]={src:LOGO[key],id:0};curImgs.add(key);cur.push(`q ${f(w)} 0 0 ${f(h)} ${f(x)} ${f(Y(y+h))} cm /Im_${key} Do Q`);return api;},
+  op(s){cur.push(s);},
+  fill(h){cur.push(rgb(h)+' rg');return api;},stroke(h){cur.push(rgb(h)+' RG');return api;},lw(w){cur.push(f(w)+' w');return api;},
+  rect(x,y,w,h,m='f'){cur.push(`${f(x)} ${f(Y(y+h))} ${f(w)} ${f(h)} re ${m}`);return api;},
+  rrect(x,y,w,h,r,m='f'){r=Math.min(r,w/2,h/2);const k=0.5523*r,x2=x+w,y2=y+h;
+   cur.push([`${f(x+r)} ${f(Y(y))} m`,`${f(x2-r)} ${f(Y(y))} l`,`${f(x2-r+k)} ${f(Y(y))} ${f(x2)} ${f(Y(y+r-k))} ${f(x2)} ${f(Y(y+r))} c`,`${f(x2)} ${f(Y(y2-r))} l`,`${f(x2)} ${f(Y(y2-r+k))} ${f(x2-r+k)} ${f(Y(y2))} ${f(x2-r)} ${f(Y(y2))} c`,`${f(x+r)} ${f(Y(y2))} l`,`${f(x+r-k)} ${f(Y(y2))} ${f(x)} ${f(Y(y2-r+k))} ${f(x)} ${f(Y(y2-r))} c`,`${f(x)} ${f(Y(y+r))} l`,`${f(x)} ${f(Y(y+r-k))} ${f(x+r-k)} ${f(Y(y))} ${f(x+r)} ${f(Y(y))} c`,m].join(' '));return api;},
+  circle(cx,cy,r,m='f'){const k=0.5523*r;cur.push([`${f(cx+r)} ${f(Y(cy))} m`,`${f(cx+r)} ${f(Y(cy-k))} ${f(cx+k)} ${f(Y(cy-r))} ${f(cx)} ${f(Y(cy-r))} c`,`${f(cx-k)} ${f(Y(cy-r))} ${f(cx-r)} ${f(Y(cy-k))} ${f(cx-r)} ${f(Y(cy))} c`,`${f(cx-r)} ${f(Y(cy+k))} ${f(cx-k)} ${f(Y(cy+r))} ${f(cx)} ${f(Y(cy+r))} c`,`${f(cx+k)} ${f(Y(cy+r))} ${f(cx+r)} ${f(Y(cy+k))} ${f(cx+r)} ${f(Y(cy))} c`,m].join(' '));return api;},
+  poly(pts,m='f'){cur.push(pts.map((p,i)=>`${f(p[0])} ${f(Y(p[1]))} ${i?'l':'m'}`).join(' ')+(m==='S'?' S':' h '+m));return api;},
+  line(x1,y1,x2,y2){cur.push(`${f(x1)} ${f(Y(y1))} m ${f(x2)} ${f(Y(y2))} l S`);return api;},
+  width(s,size,ft='H'){s=ascii(s);let t=0;for(const ch of s){const c=ch.charCodeAt(0);t+=FW[ft][c-32]||556;}return t*size/1000;},
+  wrap(s,size,ft,maxw){const words=ascii(s).split(/\s+/).filter(Boolean),lines=[];let ln='';
+   words.forEach(w=>{const t=ln?ln+' '+w:w;if(api.width(t,size,ft)>maxw&&ln){lines.push(ln);ln=w;}else ln=t;});if(ln)lines.push(ln);return lines;},
+  text(s,x,y,size=10,ft='H',color='#16243a',align='left'){s=ascii(s);let xx=x;const w=api.width(s,size,ft);if(align==='right')xx=x-w;else if(align==='center')xx=x-w/2;
+   const e=s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+   cur.push(`BT ${rgb(color)} rg /F${'HBI'.indexOf(ft)+1} ${f(size)} Tf ${f(xx)} ${f(Y(y))} Td (${e}) Tj ET`);return api;},
+  output(){const objs=[];const add=s=>{objs.push(s);return objs.length;};
+   const fonts=['H','B','I'].map(k=>add(`<< /Type /Font /Subtype /Type1 /BaseFont /${FN[k]} /Encoding /WinAnsiEncoding >>`));
+   for(const k in imgs){const bin=atob(imgs[k].src.jpg);imgs[k].id=add(`<< /Type /XObject /Subtype /Image /Width ${imgs[k].src.w} /Height ${imgs[k].src.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>\nstream\n${bin}\nendstream`);}
+   const pagesId=objs.length+1;add('');const kids=[];
+   pages.forEach(p=>{const c=p.join('\n');const cid=add(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);
+    kids.push(add(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 ${fonts[0]} 0 R /F2 ${fonts[1]} 0 R /F3 ${fonts[2]} 0 R >> /XObject << ${[...p.imgs].map(k=>`/Im_${k} ${imgs[k].id} 0 R`).join(' ')} >> >> /Contents ${cid} 0 R >>`));});
+   objs[pagesId-1]=`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`;
+   const cat=add(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
+   let out='%PDF-1.4\n';const off=[];objs.forEach((o,i)=>{off.push(out.length);out+=`${i+1} 0 obj\n${o}\nendobj\n`;});
+   const x=out.length;out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('');
+   out+=`trailer\n<< /Size ${objs.length+1} /Root ${cat} 0 R >>\nstartxref\n${x}\n%%EOF`;
+   const b=new Uint8Array(out.length);for(let i=0;i<out.length;i++)b[i]=out.charCodeAt(i)&255;return b;}};
+ return api;
+}
+// ================= DESAIN LAPORAN PDF =================
+const PC={navy:'#16243a',blue:'#1d4e89',gold:'#b8892d',ok:'#1f8a5b',warn:'#c27c0e',bad:'#c2410c',muted:'#667085',line:'#e4e0d7',soft:'#f6f4ef',track:'#ebe8e1',
+ okBg:'#e3f4ec',warnBg:'#fdf1dc',badBg:'#fde8df',blueBg:'#e9f0fa'};
+const lvlC=v=>v>=70?'ok':v>=45?'warn':'bad';
+// Ikon vektor putih di dalam lingkaran berwarna
+function icon(p,name,cx,cy,r,bg){
+ p.fill(bg).circle(cx,cy,r);p.fill('#ffffff').stroke('#ffffff');const s=r/9;p.lw(1.3*s);
+ const P=(x,y)=>[cx+x*s,cy+y*s];
+ switch(name){
+  case 'target':p.circle(cx,cy,5.2*s,'S').circle(cx,cy,2.6*s,'S').circle(cx,cy,0.9*s);break;
+  case 'shield':p.poly([P(0,-5.5),P(4.6,-3.6),P(4.2,1.2),P(0,5.6),P(-4.2,1.2),P(-4.6,-3.6)]);p.stroke(bg).lw(1.3*s).poly([P(-2,0),P(-0.5,1.6),P(2.4,-1.8)],'S');break;
+  case 'bulb':p.circle(cx,cy-1.2*s,3.8*s);p.rect(cx-1.8*s,cy+2.4*s,3.6*s,1.2*s);p.rect(cx-1.4*s,cy+4.1*s,2.8*s,1*s);break;
+  case 'star':{const pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?2.3:5.5;pts.push(P(Math.cos(a)*rr,Math.sin(a)*rr));}p.poly(pts);break;}
+  case 'check':p.lw(1.8*s).poly([P(-4,0.2),P(-1.2,3),P(4.2,-3)],'S');break;
+  case 'bars':p.rect(cx-4.6*s,cy+0.5*s,2.2*s,4*s).rect(cx-1.1*s,cy-2.2*s,2.2*s,6.7*s).rect(cx+2.4*s,cy-4.6*s,2.2*s,9.1*s);break;
+  case 'building':p.rect(cx-4*s,cy-4.8*s,8*s,9.6*s);p.fill(bg);for(let i=0;i<3;i++)for(let j=0;j<2;j++)p.rect(cx+(j?0.9:-2.7)*s,cy+(-3.2+i*2.6)*s,1.8*s,1.4*s);p.rect(cx-1*s,cy+2.8*s,2*s,2*s);break;
+  case 'people':p.circle(cx-2.4*s,cy-2.2*s,1.8*s).circle(cx+2.6*s,cy-2.6*s,1.6*s);p.rrect(cx-5.4*s,cy+0.4*s,6*s,4.2*s,2*s).rrect(cx+0.2*s,cy-0.2*s,5.2*s,4*s,1.8*s);break;
+  case 'up':p.poly([P(0,-5),P(4.2,-0.6),P(1.5,-0.6),P(1.5,4.8),P(-1.5,4.8),P(-1.5,-0.6),P(-4.2,-0.6)]);break;
+  case 'chat':p.rrect(cx-5*s,cy-4.2*s,10*s,7*s,2*s);p.poly([P(-2.5,2.6),P(-3.4,5.4),P(0.4,2.6)]);break;
+  case 'doc':p.rrect(cx-3.8*s,cy-5*s,7.6*s,10*s,1*s);p.stroke(bg).lw(1*s);for(let i=0;i<3;i++)p.line(cx-2.2*s,cy+(-2.4+i*2.2)*s,cx+2.2*s,cy+(-2.4+i*2.2)*s);break;
+  case 'pen':p.poly([P(-4.5,4.5),P(-4,2),P(2.6,-4.6),P(4.6,-2.6),P(-2,4)]);break;
+  case 'info':p.circle(cx,cy-3.2*s,1.1*s);p.rect(cx-0.9*s,cy-1.2*s,1.8*s,5.4*s);break;
+  case 'alert':p.poly([P(0,-5),P(5,4.2),P(-5,4.2)]);p.fill(bg).rect(cx-0.6*s,cy-1.6*s,1.2*s,3.2*s).circle(cx,cy+2.6*s,0.7*s);break;
+ }
+}
+function pdfReport(R){
+ const o=R.base,r=R.r,p=MiniPDF(),M=40,W=p.W,CW=W-2*M,BOT=p.H-46;let y=0,pg=0;
+ const lead=!!r.LD;
+ const footer=()=>{p.lw(.5).stroke(PC.line).line(M,p.H-36,W-M,p.H-36);
+  p.text('RAHASIA - hanya untuk HRD',M,p.H-21,7.5,'H',PC.muted);const zw=82,zh=zw*LOGO.zhm.h/LOGO.zhm.w;p.image('zhm',W/2-zw/2,p.H-27.5,zw,zh);p.text('Halaman '+pg,W-M,p.H-21,7.5,'H',PC.muted,'right');};
+ const newPage=(first)=>{if(pg)footer();p.page();pg++;
+  if(!first){const lh=24,lw=lh*LOGO.gz.w/LOGO.gz.h;p.image('gz',M,12,lw,lh);p.text(o.n,W-M,22,9,'B',PC.navy,'right');p.text(DEPTS[o.d].n+'  |  '+(LV[o.lv]||''),W-M,33,7.8,'H',PC.muted,'right');
+   p.fill(PC.gold).rect(M,44,CW,1.2);y=62;}};
+ const need=h=>{if(y+h>BOT)newPage(false);};
+ const sec=(ic,title,col=PC.blue,h=80)=>{need(h);icon(p,ic,M+11,y+11,11,col);p.text(title,M+30,y+15.5,13,'B',PC.navy);y+=32;};
+ const para=(s,size=9.5,ft='H',color=PC.navy,x=M,w=CW,lh=1.42)=>{p.wrap(s,size,ft,w).forEach(l=>{need(size*lh);p.text(l,x,y+size,size,ft,color);y+=size*lh;});};
+ const bar=(label,v,right,desc)=>{const dl=desc?p.wrap(desc,8.3,'H',CW):[];need(22+dl.length*11.5);
+  p.text(label,M,y+9,9.5,'B',PC.navy);p.text(right,W-M,y+9,9.5,'B',PC[lvlC(v)],'right');y+=14;
+  p.fill(PC.track).rrect(M,y,CW,5.5,2.75);if(v>0)p.fill(PC[lvlC(v)]).rrect(M,y,Math.max(5.5,CW*v/100),5.5,2.75);y+=10;
+  dl.forEach(l=>{p.text(l,M,y+8.3,8.3,'H',PC.muted);y+=11.5;});y+=5;};
+ const bullets=(arr,col)=>arr.forEach(s=>{const ls=p.wrap(s,9.3,'H',CW-16);need(ls.length*13+4);p.fill(col).circle(M+4,y+5.6,2.2);
+  ls.forEach(l=>{p.text(l,M+14,y+9.3,9.3,'H',PC.navy);y+=13;});y+=4;});
+
+ // ---------- HALAMAN 1: SAMPUL & RINGKASAN ----------
+ newPage(true);
+ {const lh=46,lw=lh*LOGO.gz.w/LOGO.gz.h;p.image('gz',M,20,lw,lh);}
+ p.text('LAPORAN PSIKOTES KARYAWAN',W-M,38,9,'B',PC.navy,'right');
+ p.fill(PC.navy).rrect(W-M-70,46,70,17,8.5);p.text('RAHASIA',W-M-35,57.5,7.8,'B','#ffffff','center');
+ const T=80;p.fill(PC.navy).rect(0,T,W,150);p.fill(PC.gold).rect(0,T+150,W,3);
+ p.text(o.n,M,T+38,24,'B','#ffffff');
+ p.text(o.j+'  |  '+DEPTS[o.d].n+'  |  '+(LV[o.lv]||''),M,T+60,10.5,'H','#c8d2e3');
+ const meta=[['Tujuan',PURP[o.p]],['Tanggal tes',o.t],['Durasi',o.s?(Math.round(o.s/6)/10)+' menit':'-'],['Jumlah soal',o.items.length+' soal']];
+ const mw=CW/4;meta.forEach((m,i)=>{p.text(m[0].toUpperCase(),M+i*mw,T+90,7,'B','#8a97ad');p.wrap(m[1],9,'B',mw-8).slice(0,2).forEach((l,j)=>p.text(l,M+i*mw,T+103+j*11,9,'B','#ffffff'));});
+ y=T+168;
+ // KPI
+ const vlab={ok:'Valid',warn:'Valid dgn catatan',bad:'Perlu konfirmasi'};
+ const kpis=[
+  {ic:'target',lab:'Kesesuaian',sub:DEPTS[o.d].n,v:r.fin[o.d],st:fitLbl(r.fin[o.d]),c:cls(r.fin[o.d])},
+  {ic:'shield',lab:'Integritas',sub:'Kejujuran & kepatuhan',v:r.inTot,st:inLbl(r.inTot),c:r.inTot>=75?'ok':r.inTot>=60?'warn':'bad'},
+  lead?{ic:'people',lab:'Kepemimpinan',sub:'Kesiapan memimpin',v:r.ldTot,st:ldLbl(r.ldTot),c:r.ldTot>=75?'ok':r.ldTot>=60?'warn':'bad'}
+      :{ic:'bulb',lab:'Minat utama',sub:'Lalu: '+MN_TR[r.mtop[1]].n,big:MN_TR[r.mtop[0]].n,st:'Minat terkuat',c:'ok'},
+  {ic:'check',lab:'Validitas',sub:'Konsistensi jawaban',big:vlab[r.valid],st:r.flags.length?r.flags.length+' catatan':'Tanpa catatan',c:r.valid}];
+ const g=10,tw=(CW-3*g)/4,th=112;
+ kpis.forEach((k,i)=>{const x=M+i*(tw+g);p.fill('#ffffff').stroke(PC.line).lw(.8).rrect(x,y,tw,th,10,'B');
+  icon(p,k.ic,x+20,y+20,11,PC[k.c]);p.text(k.lab.toUpperCase(),x+36,y+18,7.3,'B',PC.muted);p.wrap(k.sub,7.3,'H',tw-40).slice(0,1).forEach(l=>p.text(l,x+36,y+27,7.3,'H',PC.muted));
+  if(k.v!=null){p.text(String(k.v),x+12,y+70,30,'B',PC[k.c]);p.text('/100',x+14+p.width(String(k.v),30,'B'),y+70,9,'H',PC.muted);
+   p.fill(PC.track).rrect(x+12,y+80,tw-24,4,2);p.fill(PC[k.c]).rrect(x+12,y+80,Math.max(4,(tw-24)*k.v/100),4,2);}
+  else{const ls=p.wrap(k.big,13,'B',tw-24).slice(0,2);ls.forEach((l,j)=>p.text(l,x+12,y+56+j*16,13,'B',PC[k.c]));}
+  p.fill(PC[k.c+'Bg']).rrect(x+12,y+th-24,tw-24,15,7.5);p.text(k.st,x+tw/2,y+th-13.5,7.8,'B',PC[k.c],'center');});
+ y+=th+18;
+ // Kesimpulan
+ const conc=R.B.find(b=>b.t==='p').s;const cl=p.wrap(conc,9.8,'H',CW-34);const ch=cl.length*14+38;
+ p.fill(PC.soft).rrect(M,y,CW,ch,10);p.fill(PC[cls(r.fin[o.d])]).rrect(M,y,5,ch,2.5);
+ p.text('KESIMPULAN',M+20,y+20,8,'B',PC.gold);cl.forEach((l,i)=>p.text(l,M+20,y+36+i*14,9.8,'H',PC.navy));y+=ch+18;
+ // Top 3
+ p.text('DEPARTEMEN PALING SESUAI',M,y+8,8,'B',PC.gold);y+=16;
+ const cw3=(CW-2*g)/3;r.rank.slice(0,3).forEach((d,i)=>{const x=M+i*(cw3+g);p.fill(i?'#ffffff':PC.blueBg).stroke(i?PC.line:'#c9d8ef').lw(.8).rrect(x,y,cw3,46,10,'B');
+  p.fill(i?PC.muted:PC.blue).circle(x+19,y+23,10);p.text(String(i+1),x+19,y+26.5,10,'B','#ffffff','center');
+  p.wrap(DEPTS[d].n,9.5,'B',cw3-72).slice(0,2).forEach((l,j,a)=>p.text(l,x+36,y+(a.length>1?20:26)+j*12,9.5,'B',PC.navy));
+  p.text(r.fin[d]+'',x+cw3-12,y+27,13,'B',PC[lvlC(r.fin[d])],'right');if(d===o.d){p.fill(PC.gold).rrect(x+cw3-52,y-7,44,13,6.5);p.text('DITUJU',x+cw3-30,y+2.3,6.8,'B','#ffffff','center');}});
+ y+=62;
+ // Rekomendasi semua departemen
+ sec('building','Kesesuaian per departemen');
+ r.rank.forEach(d=>{need(18);const mark=d===o.d;p.text(DEPTS[d].n+(mark?'  (dituju)':'')+(r.inTot<60&&SENS.includes(d)?'  *':''),M,y+9,9,mark?'B':'H',PC.navy);
+  const bx=M+165,bw=CW-165-100;p.fill(PC.track).rrect(bx,y+3.5,bw,5.5,2.75);p.fill(PC[lvlC(r.fin[d])]).rrect(bx,y+3.5,Math.max(5.5,bw*r.fin[d]/100),5.5,2.75);
+  p.text(r.fin[d]+'  '+fitLbl(r.fin[d]),W-M,y+9,8.5,'B',PC[lvlC(r.fin[d])],'right');y+=17;});
+ y+=2;para('Skor gabungan: 60% gaya kerja + 40% minat kerja.'+(r.inTot<60?' Tanda * = posisi yang memegang uang/barang tamu; skor dibatasi karena integritas rendah.':''),8,'I',PC.muted);
+
+ // ---------- GAYA KERJA ----------
+ newPage(false);
+ sec('bars','Sesi 1  |  Gaya kerja');
+ for(const k in PK_TR){const v=r.PK[k];bar(PK_TR[k].n+(k==='INT'?' (dari sesi 2)':''),v,v+'  |  '+lvl(v),v>=70?PK_TR[k].hi:v>=45?PK_TR[k].md:PK_TR[k].lo);}
+ y+=6;sec('shield','Sesi 2  |  Integritas',PC[r.inTot>=75?'ok':r.inTot>=60?'warn':'bad']);
+ para('Skor total '+r.inTot+'/100 ('+inLbl(r.inTot)+'). Rekomendasi: '+inRec(r.inTot)+'.',9.8,'B');y+=6;
+ for(const k in IN_TR){const v=r.IN[k];bar(IN_TR[k].n,v,v+'  |  '+inLbl(v));}
+ if(r.crit.length){need(60);const items=r.crit.map(x=>x[0]+'  Jawaban: "'+x[1]+'"');let hh=30;items.forEach(s=>hh+=p.wrap(s,8.8,'H',CW-40).length*12+6);
+  need(hh);p.fill(PC.badBg).rrect(M,y,CW,hh,10);icon(p,'alert',M+18,y+16,8,PC.bad);p.text('Jawaban situasi yang kritis (wajib ditanyakan)',M+32,y+19.5,9.5,'B',PC.bad);let yy=y+32;
+  items.forEach(s=>{p.wrap(s,8.8,'H',CW-40).forEach(l=>{p.text(l,M+20,yy+8.8,8.8,'H',PC.navy);yy+=12;});yy+=6;});y+=hh+10;}
+
+ // ---------- MINAT, KEPEMIMPINAN ----------
+ y+=10;
+ sec('bulb','Sesi 3  |  Minat kerja',PC.gold);
+ para('Minat utama: '+r.mtop.slice(0,3).map(k=>MN_TR[k].n).join(', ')+'.',9.8,'B');y+=6;
+ r.mtop.forEach(k=>{const v=r.MN[k];bar(MN_TR[k].n,v,v+'  |  '+lvl(v),MN_TR[k].d);});
+ if(lead){y+=6;sec('people','Sesi 4  |  Kepemimpinan',PC[r.ldTot>=75?'ok':r.ldTot>=60?'warn':'bad']);
+  para('Kesiapan memimpin '+r.ldTot+'/100 ('+ldLbl(r.ldTot)+').',9.8,'B');y+=6;
+  for(const k in r.LD){const v=r.LD[k];bar(LD_TR[k].n,v,v+'  |  '+inLbl(v));}
+  if(r.critL.length){para('Respons kepemimpinan yang kritis:',9.3,'B',PC.bad);bullets(r.critL.map(x=>x[0]+'  Jawaban: "'+x[1]+'"'),PC.bad);}}
+ if(r.flags.length){y+=6;sec('alert','Catatan validitas',PC[r.valid]);bullets(r.flags.map(x=>x[1]),PC[r.valid]);}
+
+ // ---------- TINDAK LANJUT ----------
+ const get=t=>{const i=R.B.findIndex(b=>b.t==='h'&&b.s===t);return i<0?null:R.B[i+1];};
+ y+=10;
+ const kk=get('Kekuatan'),dv=get('Area pengembangan'),qq=R.B.find(b=>b.t==='h'&&b.s.startsWith('Pertanyaan'));
+ sec('star','Kekuatan',PC.ok);if(kk&&kk.a)bullets(kk.a,PC.ok);else para('Tidak ada aspek yang menonjol tinggi.',9,'I',PC.muted);
+ y+=4;sec('up','Area pengembangan',PC.warn);if(dv&&dv.a)bullets(dv.a,PC.warn);else para('Tidak ada aspek yang perlu perhatian khusus.',9,'I',PC.muted);
+ if(qq){const ql=R.B[R.B.indexOf(qq)+1].a;y+=4;sec('chat',qq.s);ql.forEach((q,i)=>{const ls=p.wrap(q,9.3,'H',CW-26);need(ls.length*13+6);
+  p.fill(PC.blueBg).circle(M+8,y+6,8);p.text(String(i+1),M+8,y+9,8,'B',PC.blue,'center');ls.forEach(l=>{p.text(l,M+24,y+9.3,9.3,'H',PC.navy);y+=13;});y+=6;});}
+ y+=4;sec('doc','Catatan untuk '+PURP[o.p].toLowerCase(),PC.muted);para(PNOTE[o.p],9.3);
+ // Keputusan
+ y+=10;need(170);sec('pen','Keputusan HRD',PC.navy);
+ p.fill('#ffffff').stroke(PC.line).lw(.8).rrect(M,y,CW,150,10,'B');
+ [['Diterima / Diperpanjang',PC.ok],['Dipertimbangkan',PC.warn],['Tidak dilanjutkan',PC.bad]].forEach((c,i)=>{const x=M+16+i*(CW-32)/3;p.stroke(c[1]).lw(1.2).rrect(x,y+16,11,11,2.5,'S');p.text(c[0],x+17,y+25,9,'B',PC.navy);});
+ p.text('Penempatan departemen:',M+16,y+52,9,'H',PC.muted);p.stroke(PC.line).lw(.8).line(M+125,y+54,W-M-16,y+54);
+ p.text('Catatan:',M+16,y+74,9,'H',PC.muted);p.line(M+60,y+76,W-M-16,y+76);p.line(M+16,y+96,W-M-16,y+96);
+ p.text('Pemeriksa (HRD)',M+16,y+138,8.5,'H',PC.muted);p.line(M+16,y+126,M+170,y+126);
+ p.text('Tanggal',M+CW/2+20,y+138,8.5,'H',PC.muted);p.line(M+CW/2+20,y+126,W-M-16,y+126);
+ y+=164;
+ const mt=get('Metode & sumber');if(mt){need(60);icon(p,'info',M+7,y+6,7,PC.muted);p.text('Metode & sumber',M+20,y+9.5,8.5,'B',PC.muted);y+=18;para(mt.s,7.8,'H',PC.muted);}
+ y+=4;para('Hasil tes ini adalah alat bantu untuk mengenal gaya kerja, sikap, minat, dan kepemimpinan; bukan diagnosis psikologis dan bukan satu-satunya dasar keputusan kepegawaian. Gunakan bersama wawancara, data kinerja, dan penilaian atasan.',7.8,'I',PC.muted);
+ footer();
+ return p.output();
+}
+let dlP=null;
+async function savePdf(R,btn,pn){
+ btn.disabled=true;btn.textContent='Menyiapkan PDF...';
+ try{
+  const bytes=pdfReport(R),blob=new Blob([bytes],{type:'application/pdf'});
+  const fn=('Psikotes - '+R.base.n+' - '+DEPTS[R.base.d].n+' - '+R.base.t).replace(/[\\/:*?"<>|]/g,'')+'.pdf';
+  const dl=window.claude&&window.claude.use?await (dlP||(dlP=window.claude.use('downloads'))):null;
+  if(dl){await dl.save({filename:fn,data:blob});toast('PDF siap disimpan');return;}
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fn;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);toast('PDF diunduh');
+ }catch(e){const c=e&&e.code;if(c==='declined')toast('Unduhan dibatalkan');else if(c==='rate_limited')toast('Tunggu sebentar lalu coba lagi');else{toast('Gagal membuat PDF');pn.textContent='PDF gagal dibuat di tampilan ini. Gunakan "Salin ringkasan teks".';console.error(e);}}
+ finally{btn.disabled=false;btn.textContent='Unduh laporan PDF';}
+}
+function summaryText(R){
+ const out=[];R.B.forEach(b=>{if(b.t==='kv')b.a.forEach(([k,v])=>out.push(k+': '+v));else if(b.t==='h')out.push('\n== '+b.s.toUpperCase()+' ==');else if(b.t==='badge'||b.t==='p')out.push(b.s);else if(b.t==='li')b.a.forEach(x=>out.push('- '+x));else if(b.t==='ol')b.a.forEach((x,i)=>out.push((i+1)+'. '+x));else if(b.t==='bar')out.push(b.l+': '+b.r);});
+ return out.join('\n');
+}
+
+// ================= ALUR KARYAWAN =================
+const KEY='psikotes_hotel_v5',HKEY='psikotes_hotel_v5_hrd';
+function fresh(){return {view:'intro',info:{n:'',j:'',d:'',p:'',lv:''},ans:[],i:0,start:0,code:'',sd:0};}
+let ITS=null;
+function items(){if(!ITS||ITS._sd!==st.sd||ITS._lv!==st.info.lv){ITS=buildItems(st.sd,st.info.lv);ITS._sd=st.sd;ITS._lv=st.info.lv;ITS._si=sesInfo(ITS);}return ITS;}
+function newSeed(){try{return crypto.getRandomValues(new Uint32Array(1))[0];}catch(e){return Math.floor(Math.random()*4294967295);}}
+let st=null;try{st=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+if(!st||!st.info)st=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+function render(){document.body.classList.toggle('lock',location.hash!=='#hrd'&&st.view==='q');if(location.hash==='#hrd')return hrd();save();({intro,guide,q:question,brk,done}[st.view]||intro)();window.scrollTo(0,0);}
+['copy','cut','contextmenu','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{if(document.body.classList.contains('lock'))e.preventDefault();}));
+const sesOf=i=>items()[i].s;
+function steps(){const si=items()._si;return `<div class="steps">${si.list.map(s=>{const done=Math.min(Math.max(st.i-si.st[s],0),si.c[s]);return `<span><i style="width:${done/si.c[s]*100}%"></i></span>`}).join('')}</div>`;}
+function intro(){
+ const opt=DK.map(k=>`<option value="${k}" ${st.info.d===k?'selected':''}>${DEPTS[k].n}</option>`).join('');
+ app.innerHTML=`<div class="fade"><img src="data:image/jpeg;base64,${LOGO.gz.jpg}" alt="Grand Zuri Dumai" style="height:54px;margin:4px 0 18px;mix-blend-mode:multiply"><div class="eyebrow">Psikotes karyawan</div><h1>Tes Profil Karyawan</h1>
+ <p class="muted">Tes ini membantu kami mengenal gaya kerja, sikap, dan minat Anda agar bisa ditempatkan di posisi yang paling sesuai. Tidak ada jawaban benar atau salah, jadi jawablah dengan jujur.</p>
+ ${hasCrypto()?'':'<div class="card" style="border-color:#f7d6c3"><p class="note" style="color:var(--bad);margin:0">Halaman ini harus dibuka melalui alamat https:// agar kode hasil bisa dibuat. Hubungi IT.</p></div>'}
+ <div class="card">
+  <label>Nama lengkap</label><input id="n" value="${esc(st.info.n)}" autocomplete="name">
+  <label>Jabatan / posisi yang dilamar</label><input id="j" value="${esc(st.info.j)}" placeholder="Misalnya: Room Attendant">
+  <label>Departemen</label><select id="d"><option value="">Pilih departemen</option>${opt}</select>
+  <label>Level jabatan</label><select id="lv"><option value="">Pilih level</option>${Object.keys(LV).map(k=>`<option value="${k}" ${st.info.lv===k?'selected':''}>${LV[k]}</option>`).join('')}</select>
+  <label>Tujuan tes</label><select id="p"><option value="">Pilih tujuan</option>${Object.keys(PURP).map(k=>`<option value="${k}" ${st.info.p===k?'selected':''}>${PURP[k]}</option>`).join('')}</select>
+  <div class="err" id="er"></div></div>
+ <button class="btn" id="go">${st.ans.length?'Lanjutkan tes':'Lanjut'}</button>
+ ${st.ans.length?'<button class="btn ghost" id="rs">Mulai dari awal</button>':''}
+ <p class="note" style="margin-top:28px">Petugas HRD? <a class="link" href="#hrd">Buka mode HRD</a></p></div>`;
+ document.getElementById('go').onclick=()=>{const v=id=>document.getElementById(id).value.trim();
+  const info={n:v('n'),j:v('j'),d:v('d'),p:v('p'),lv:v('lv')};
+  if(!info.n||!info.j||!info.d||!info.p||!info.lv){document.getElementById('er').textContent='Lengkapi semua data terlebih dahulu.';return;}
+  if(st.ans.length&&!st.code&&info.lv!==st.info.lv){st.ans=[];st.i=0;st.sd=0;}
+  if(st.code&&(info.lv!==st.info.lv||info.n!==st.info.n)){st=fresh();}
+  st.info=info;st.view=st.code?'done':st.ans.length?'q':'guide';render();};
+ const rs=document.getElementById('rs');if(rs)rs.onclick=()=>{st=fresh();render();};
+}
+function guide(){
+ if(!st.sd)st.sd=newSeed();
+ const IT=items(),si=IT._si;
+ app.innerHTML=`<div class="fade"><div class="eyebrow">Petunjuk</div><h1>Sebelum mulai</h1>
+ <div class="card"><p style="margin-top:0">Ada <b>${IT.length} soal</b> dalam <b>${si.list.length} sesi</b> yang berlanjut otomatis, sekitar <b>${Math.round(IT.length*0.18)}–${Math.round(IT.length*0.23)} menit</b>:</p>
+ <ul>${si.list.map(s=>`<li><b>Sesi ${s}: ${SES[s].nm}</b> (${si.c[s]} soal)</li>`).join('')}</ul>
+ <ul><li>Jawab sesuai diri Anda yang sebenarnya, bukan yang dianggap ideal.</li>
+ <li>Setiap peserta mendapat kombinasi soal yang berbeda, jadi kerjakan sendiri.</li>
+ <li>Tes ini memiliki pengecekan konsistensi. Jawaban yang dibuat-buat justru membuat hasil tidak valid.</li>
+ <li>Kerjakan di tempat yang tenang, sekali duduk.</li></ul></div>
+ <button class="btn" id="go">Mulai sesi 1</button></div>`;
+ document.getElementById('go').onclick=()=>{st.start=Date.now();st.view='q';render();};
+}
+function question(){
+ const IT=items(),N=IT.length,si=IT._si,i=st.i,it=IT[i],s=it.s,cur=st.ans[i],sit=!!it.o,first=i===si.st[s];
+ const firstSit=sit&&i>0&&!IT[i-1].o;
+ const opts=sit?it.ord.map((oi,j)=>`<button data-v="${oi+1}" class="${cur===oi+1?'sel':''}"><b>${'ABCD'[j]}</b>${esc(it.o[oi][0])}</button>`).join('')
+  :SES[s].scale.map((l,j)=>`<button data-v="${j+1}" class="${cur===j+1?'sel':''}"><b>${j+1}</b>${l}</button>`).join('');
+ app.innerHTML=`<div class="fade"><div class="top"><span>Sesi ${s} dari ${si.list.length} · ${SES[s].nm}</span><span>${i+1}/${N}</span></div>${steps()}
+ ${first||firstSit?`<div class="card" style="padding:12px 14px;margin:0 0 14px;background:#f6f8fc"><p class="note" style="margin:0">${firstSit?'Mulai di sini: pilih tindakan yang <b>paling mungkin Anda lakukan</b> dalam situasi berikut.':SES[s].ins}</p></div>`:''}
+ ${sit?'<div class="note" style="font-weight:700;margin-bottom:4px">Situasi</div>':''}<div class="q">${esc(it.q)}</div>
+ <div class="lik">${opts}</div><button class="back" id="bk">← ${i===0?'Kembali':'Soal sebelumnya'}</button></div>`;
+ app.querySelectorAll('.lik button').forEach(b=>b.onclick=()=>{
+  b.classList.add('sel');st.ans[i]=+b.dataset.v;st.i=i+1;
+  if(st.i>=N){st.view='done';}else st.view=(sesOf(st.i)!==s)?'brk':'q';
+  setTimeout(render,130);});
+ document.getElementById('bk').onclick=()=>{if(i===0)st.view='guide';else st.i=i-1;render();};
+}
+function brk(){
+ const nx=sesOf(st.i),prev=nx-1,si=items()._si,N=items().length,last=nx===si.list[si.list.length-1];
+ app.innerHTML=`<div class="fade"><div class="top"><span>Istirahat sebentar</span><span>${st.i}/${N}</span></div>${steps()}
+ <div class="card" style="text-align:center;padding:28px 18px"><div style="font-size:40px">${last?'💪':'👍'}</div><h2>Sesi ${prev} selesai</h2>
+ <p class="muted">${last?'Tinggal satu sesi lagi.':'Bagus, lanjutkan.'} Berikutnya: <b style="color:var(--ink)">Sesi ${nx} · ${SES[nx].nm}</b> (${si.c[nx]} soal).</p></div>
+ <button class="btn" id="go">Lanjut sesi ${nx}</button><button class="btn ghost" id="bk">Ubah jawaban terakhir</button></div>`;
+ document.getElementById('go').onclick=()=>{st.view='q';render();};
+ document.getElementById('bk').onclick=()=>{st.i--;st.view='q';render();};
+}
+let busy=false;
+async function finish(){
+ const s=st.start?Math.round((Date.now()-st.start)/1000):0;
+ st.code=await encryptPayload({v:5,b:BANK_VER,sd:st.sd,lv:st.info.lv,n:st.info.n,j:st.info.j,d:st.info.d,p:st.info.p,t:new Date().toISOString().slice(0,10),s,a:st.ans.join('')});
+ save();
+}
+const codeMsg=()=>`Kode hasil psikotes\nNama: ${st.info.n}\nJabatan: ${st.info.j}\nDepartemen: ${DEPTS[st.info.d].n}\nLevel: ${LV[st.info.lv]}\n\n${st.code}`;
+function done(){
+ if(!st.code){
+  app.innerHTML=`<div class="fade"><div class="eyebrow">Selesai</div><h1>Menyiapkan kode hasil...</h1><p class="muted" id="em">Mohon tunggu sebentar.</p></div>`;
+  if(!busy){busy=true;finish().then(()=>{busy=false;render();}).catch(e=>{busy=false;const em=document.getElementById('em');if(em)em.innerHTML='Kode gagal dibuat. Pastikan halaman dibuka melalui https://, lalu muat ulang halaman. Jawaban Anda tetap tersimpan.';console.error(e);});}
+  return;}
+ app.innerHTML=`<div class="fade"><div class="eyebrow">Selesai</div><h1>Terima kasih, ${esc(st.info.n.split(' ')[0])}.</h1>
+ <p class="muted">Semua sesi sudah selesai. Langkah terakhir: kirim <b>kode hasil</b> di bawah ini ke HRD. Kode ini terkunci dan hanya bisa dibaca oleh HRD.</p>
+ <div class="card"><div class="code">${esc(st.code)}</div></div>
+ <a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(codeMsg())}">Kirim ke HRD lewat WhatsApp</a>
+ <button class="btn ghost" id="cp">Salin kode</button>
+ <p class="note" style="margin-top:24px">Kode tersimpan di perangkat ini sampai Anda menekan tombol di bawah.</p>
+ <button class="btn ghost" id="nw">Peserta baru (hapus data di perangkat ini)</button>
+ <p class="note" style="margin-top:24px">Petugas HRD? <a class="link" href="#hrd" id="hr">Buka mode HRD</a></p></div>`;
+ document.getElementById('cp').onclick=()=>copy(codeMsg());
+ document.getElementById('nw').onclick=()=>{st=fresh();render();};
+ document.getElementById('hr').onclick=()=>{pending=codeMsg();};
+}
+
+// ================= MODE HRD =================
+let hrdSel=null,pending='';
+function hist(){try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]}}
+function setHist(h){try{localStorage.setItem(HKEY,JSON.stringify(h.slice(0,300)))}catch(e){}}
+let PRIV=null;
+function hrdLogin(){
+ app.innerHTML=`<div class="fade"><div class="eyebrow">Mode HRD</div><h1>Masuk</h1>
+ <p class="muted">Masukkan password HRD untuk membuka hasil psikotes.</p>
+ <div class="card"><label>Password</label><input id="pw" type="password" autocomplete="current-password"><div class="err" id="er"></div></div>
+ <button class="btn" id="go">Masuk</button><a class="btn ghost" href="#" id="ex">Kembali ke halaman tes</a></div>`;
+ const go=async()=>{const b=document.getElementById('go'),er=document.getElementById('er');
+  if(!hasCrypto()){er.textContent='Halaman harus dibuka melalui https://.';return;}
+  b.disabled=true;b.textContent='Memeriksa...';
+  try{PRIV=await unlockKey(document.getElementById('pw').value);render();}
+  catch(e){er.textContent='Password salah.';b.disabled=false;b.textContent='Masuk';}};
+ document.getElementById('go').onclick=go;
+ document.getElementById('pw').onkeydown=e=>{if(e.key==='Enter')go();};
+ document.getElementById('ex').onclick=e=>{e.preventDefault();history.replaceState(null,'',location.pathname+location.search);render();};
+}
+function hrd(){
+ if(!PRIV)return hrdLogin();
+ if(hrdSel)return hrdReport(hrdSel);
+ const h=hist();
+ app.innerHTML=`<div class="fade"><div class="eyebrow">Mode HRD</div><h1>Baca hasil psikotes</h1>
+ <p class="muted">Tempel kode hasil dari peserta (diawali <b>HT5.</b>). Anda boleh menempel seluruh pesan WhatsApp-nya.</p>
+ <div class="card"><textarea id="tx" placeholder="Tempel kode di sini">${esc(pending)}</textarea><div class="err" id="er"></div></div>
+ <button class="btn" id="op">Tampilkan laporan</button>
+ ${h.length?`<div class="card hist"><h2>Riwayat di perangkat ini</h2>${h.map((x,i)=>`<button data-i="${i}"><b>${esc(x.n)}</b> · ${esc(x.j)}<br><span class="note">${LV[x.lv]||''} · ${DEPTS[x.d]?DEPTS[x.d].n:''} · ${PURP[x.p]||''} · ${x.t}</span></button>`).join('')}</div>`:''}
+ <p class="note">Riwayat hanya tersimpan di browser perangkat ini. Simpan PDF setiap laporan untuk arsip resmi.</p>
+ <button class="btn ghost" id="lo">Keluar dari mode HRD</button></div>`;
+ document.getElementById('op').onclick=async()=>{const er=document.getElementById('er');
+  try{const o=await decode(document.getElementById('tx').value,PRIV);
+   setHist([{n:o.n,j:o.j,d:o.d,p:o.p,lv:o.lv,t:o.t,code:o.code}].concat(hist().filter(x=>x.code!==o.code)));hrdSel=o;pending='';render();}
+  catch(e){er.textContent=e.message||'Kode tidak bisa dibaca.';}};
+ app.querySelectorAll('.hist button').forEach(b=>b.onclick=async()=>{try{hrdSel=await decode(h[+b.dataset.i].code,PRIV);render();}catch(e){toast('Kode rusak')}});
+ document.getElementById('lo').onclick=()=>{PRIV=null;hrdSel=null;history.replaceState(null,'',location.pathname+location.search);render();};
+}
+function hrdReport(o){
+ const R=buildReport(o);
+ app.innerHTML=`<div class="fade"><button class="back" id="bk">← Daftar & tempel kode</button>
+ <img src="data:image/jpeg;base64,${LOGO.gz.jpg}" alt="Grand Zuri Dumai" style="height:44px;margin:8px 0 14px;mix-blend-mode:multiply"><div class="eyebrow">Laporan psikotes · rahasia</div><h1>${esc(o.n)}</h1>
+ <p class="muted" style="margin-top:-4px">${esc(o.j)} · ${DEPTS[o.d].n} · ${LV[o.lv]||''}</p>
+ ${kpiHTML(R)}
+ ${reportHTML(R.B)}
+ <button class="btn gold" id="pdf">Unduh laporan PDF</button><button class="btn ghost" id="cp">Salin ringkasan teks</button>
+ <p class="note" id="pn" style="margin-top:14px">Hasil tes ini adalah alat bantu, bukan diagnosis psikologis dan bukan satu-satunya dasar keputusan kepegawaian.</p></div>`;
+ document.getElementById('bk').onclick=()=>{hrdSel=null;render();};
+ document.getElementById('cp').onclick=()=>copy(summaryText(R));
+ document.getElementById('pdf').onclick=e=>savePdf(R,e.target,document.getElementById('pn'));
+ window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',()=>{hrdSel=null;render();});
+render();
+</script>
+</body>
+</html>
